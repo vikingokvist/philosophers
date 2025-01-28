@@ -12,15 +12,20 @@
 
 #include "philosophers.h"
 
+void	print_message(int *id, char *string, int time_to_sleep)
+{
+	printf("[%d] (%d) %s\n", get_time(), *id, string);
+	usleep(time_to_sleep * 1000);
+}
+
 void	ph_think(t_philo *philo)
 {
-	printf("%d - %s - is thinking -      🤔\n", get_time(), philosopher_name(philo->id));
+	print_message(&philo->id, "is thinking", 0);
 }
 
 void	ph_sleep(t_philo *philo)
 {
-	printf("%d - %s - is sleeping -      💤\n", get_time(), philosopher_name(philo->id));
-	usleep(philo->table->time_to_sleep * 1000);
+	print_message(&philo->id, "is sleeping", philo->table->time_to_sleep);
 }
 
 void	ph_eat(t_philo *philo, int *l_fork, int *r_fork)
@@ -28,22 +33,21 @@ void	ph_eat(t_philo *philo, int *l_fork, int *r_fork)
 	if (*l_fork < *r_fork)
 	{
 		pthread_mutex_lock(&philo->table->forks[*l_fork]);
-		printf("%d - %s - has taken a fork - 🍴\n", get_time(), philosopher_name(philo->id));
+		print_message(&philo->id, "has taken a fork", 0);
 		pthread_mutex_lock(&philo->table->forks[*r_fork]);
-		printf("%d - %s - has taken a fork - 🍴\n", get_time(), philosopher_name(philo->id));
+		print_message(&philo->id, "has taken a fork", 0);
 	}
 	else
 	{
 		pthread_mutex_lock(&philo->table->forks[*r_fork]);
-		printf("%d - %s - has taken a fork - 🍴\n", get_time(), philosopher_name(philo->id));
+		print_message(&philo->id, "has taken a fork", 0);
 		pthread_mutex_lock(&philo->table->forks[*l_fork]);
-		printf("%d - %s - has taken a fork - 🍴\n", get_time(), philosopher_name(philo->id));
+		print_message(&philo->id, "has taken a fork", 0);
 	}
 	philo[philo->id].is_eating = 1;
 	philo[philo->id].meals_had++;
 	philo[philo->id].last_meal = get_time();
-	usleep(philo->table->time_to_eat * 1000);
-	printf("%d - %s - is eating -        🥘\n", get_time(), philosopher_name(philo->id));
+	print_message(&philo->id, "is eating", philo->table->time_to_eat);
 	pthread_mutex_unlock(&philo->table->forks[*l_fork]);
 	pthread_mutex_unlock(&philo->table->forks[*r_fork]);
 	philo[philo->id].is_eating = 0;

@@ -15,10 +15,8 @@
 int	had_all_meals(t_philo *philo)
 {
 	int	i;
-	int	check;
 
-	i = 1;
-	check = philo[0].meals_had;
+	i = 0;
 	while (i < philo->table->philosophers_count)
 	{
 		if (philo[i].meals_had != philo->table->meals_to_have)
@@ -29,21 +27,18 @@ int	had_all_meals(t_philo *philo)
 	return (1);
 }
 
-// int	someone_has_died(t_table *table, int *i)
-// {
-// 	int	index;
+int	someone_has_died(t_philo *philo)
+{
+	int	i;
 
-// 	index = table->number_of_philosophers % (*i + 1);
-// 	pthread_mutex_lock(&table->forks[index]);
-// 	if (get_time() - table->philosophers[index].last_meal >= table->philosophers[index].is_eating == 0)
-// 	{
-// 		pthread_mutex_unlock(&table->forks[index]);
-// 		printf("%s: died at %d\n", philosopher_name(index), get_time());
-// 		return (1);
-// 	}
-// 	pthread_mutex_unlock(&table->forks[index]);
-// 	return (0);
-// }
+	i = 0;
+	if (get_time() - philo[i].last_meal >= philo->table->time_to_die)
+	{
+		print_message(&i, "has died", 0);
+		return (1);
+	}
+	return (0);
+}
 
 int	get_time(void)
 {
@@ -51,7 +46,7 @@ int	get_time(void)
 
 	if (gettimeofday(&time, NULL) == -1)
 		return (write(1, "Error getting time\n", 20), -1);
-	return ((time.tv_usec * 1000) + (time.tv_sec / 1000));
+	return ((time.tv_usec / 100));
 }
 
 long	ft_atoi(const char *str)

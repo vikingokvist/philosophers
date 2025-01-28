@@ -14,17 +14,17 @@
 
 int	main(int argc, char **argv)
 {
-	t_table		table;
-	t_philo		philos[PHILOS_MAX];
+	t_table			table;
+	t_philo			philos[PHILOS_MAX];
 	pthread_mutex_t	forks[PHILOS_MAX];
 
-	if (argc >= 5 && argc <= 6)
-		return (write(1, "Wrong amount of arguments\n", 27), 1);
+	// if (argc >= 5 && argc <= 6)
+	// 	return (write(1, "Wrong amount of arguments\n", 27), 1);
 	if (check_valid_values(argc, argv))
 		return (write(1, "Wrong values\n", 14), 1);
 	init_table(&table, argv, forks);
-	init_forks(&table);
 	init_philos(&table, philos);
+	init_forks(&table);
 	create_threads(philos);
 	free_table(philos);
 	return (0);
