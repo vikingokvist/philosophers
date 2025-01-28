@@ -14,18 +14,18 @@
 
 int	main(int argc, char **argv)
 {
-	t_table		*table;
+	t_table		table;
+	t_philo		philos[PHILOS_MAX];
+	pthread_mutex_t	forks[PHILOS_MAX];
 
-	if (argc != 6)
-		return (1);
-	table = malloc(sizeof(t_table));
-	if (!table)
-		return (1);
-	if (init_struct(table, argv))
-		return (free_table(table), 1);
-	if (set_forks(table))
-		return (free_table(table), 1);
-	if (create_threads(table))
-		return (free_table(table), 1);
-	return (free_table(table), 0);
+	if (argc >= 5 && argc <= 6)
+		return (write(1, "Wrong amount of arguments\n", 27), 1);
+	if (check_valid_values(argc, argv))
+		return (write(1, "Wrong values\n", 14), 1);
+	init_table(&table, argv, forks);
+	init_forks(&table);
+	init_philos(&table, philos);
+	create_threads(philos);
+	free_table(philos);
+	return (0);
 }

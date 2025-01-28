@@ -12,37 +12,15 @@
 
 #include "philosophers.h"
 
-void	free_table(t_table *table)
+void	free_table(t_philo *philos)
 {
 	int	i;
 
-	if (table->thread)
-		free(table->thread);
-	if (table->fork)
+	i = 0;
+	while (i < philos->table->philosophers_count)
 	{
-		i = 0;
-		while (i < table->number_of_philosophers)
-		{
-			if (table->fork[i])
-			{
-				pthread_mutex_destroy(table->fork[i]);
-				free(table->fork[i]);
-			}
-			i++;
-		}
-		free(table->fork);
+		pthread_mutex_destroy(&philos->table->forks[i]);
+		i++;
 	}
-	if (table->philosophers)
-	{
-		i = 0;
-		while (i < table->number_of_philosophers)
-		{
-			if (table->philosophers[i])
-				free(table->philosophers[i]);
-			i++;
-		}
-		free(table->philosophers);
-	}
-	free(table);
 	exit(EXIT_SUCCESS);
 }
