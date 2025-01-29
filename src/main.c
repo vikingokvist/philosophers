@@ -20,12 +20,24 @@ int	main(int argc, char **argv)
 
 	if (argc != 6 || argc != 6)
 		return (printf(ERR_ARGS), 1);
-	if (check_valid_values(argc, argv))
-		return (printf(ERR_ARGS_VALID), 1);
-	init_table(&table, argv, forks);
-	init_philos(&table, philos);
-	init_forks(&table);
+	check_valid_values(argc, argv);
+	init_table(&table, forks, argv);
+	init_philos(&table, philos, argv);
 	create_threads(philos);
 	free_table(philos);
 	return (0);
+}
+
+void	check_valid_values(int argc, char **argv)
+{
+	if (ft_atol(argv[1]) > PHILOS_MAX || ft_atol(argv[1]) <= 0)
+		return (printf(ERR_ARGS_VALID), exit(1));
+	else if (ft_atol(argv[2]) <= 0 || ft_atol(argv[2]) >= INT_MAX)
+		return (printf(ERR_ARGS_VALID), exit(1));
+	else if (ft_atol(argv[3]) <= 0 || ft_atol(argv[3]) >= INT_MAX)
+		return (printf(ERR_ARGS_VALID), exit(1));
+	else if (ft_atol(argv[4]) <= 0 || ft_atol(argv[4]) >= INT_MAX)
+		return (printf(ERR_ARGS_VALID), exit(1));
+	else if (argc == 6 && (ft_atol(argv[5]) <= 0 || ft_atol(argv[5]) >= INT_MAX))
+		return (printf(ERR_ARGS_VALID), exit(1));
 }

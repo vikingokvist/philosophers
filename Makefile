@@ -2,8 +2,8 @@ NAME = philo
 
 #CFLAGS----------------------------------------------------------------------------------
 
-CC 	= gcc
-CFLAGS 	= -Wall -Wextra -Werror -I ./includes -g3 -fsanitize=thread
+CC 	= cc
+CFLAGS 	= -Wall -Wextra -Werror -I ./includes
 RM	= rm -rf
 NOPRINT = --no-print-directory
 
@@ -15,7 +15,7 @@ RESET := \033[0m
 
 #FILES------------------------------------------------------------------------------------
 
-SRCS = ./src/main.c ./src/init.c ./src/free_table.c \
+SRCS = ./src/main.c ./src/init.c \
 	./src/create_threads.c ./src/utils.c ./src/do_routine.c
 
 	

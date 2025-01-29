@@ -12,6 +12,7 @@
 
 #ifndef PHILOSHOPHERS_H
 # define PHILOSHOPHERS_H
+# include <limits.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -36,44 +37,52 @@
 typedef struct s_table
 {
 	int	philosophers_count;
-	size_t	time_to_eat;
-	size_t	time_to_die;
-	size_t	time_to_sleep;
-	int	meals_to_have;
 	int	someone_died;
 	int	meals_had_by_philos;
 	pthread_mutex_t	*forks;
+	pthread_mutex_t	l_fork;
+	pthread_mutex_t	r_fork;
 	pthread_mutex_t	write_lock;
 	pthread_mutex_t	meal_lock;
+	pthread_mutex_t	dead_lock;
 }	t_table;
 
 typedef struct s_philo
 {
-	pthread_t	thread;
-	int		id;
-	int		meals_had;
-	size_t		last_meal;
-	int		is_eating;
-	size_t	start_time;
-	t_table	*table;
+	pthread_t		thread;
+	int				id;
+	size_t			time_to_eat;
+	size_t			time_to_die;
+	size_t			time_to_sleep;
+	size_t			meals_to_have;
+	size_t			start_time;
+	size_t			last_meal;
+	int				meals_had;
+	int				is_eating;
+	t_table			*table;
+	pthread_mutex_t	*l_fork;
+	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*write_lock;
 	pthread_mutex_t	*meal_lock;
+	pthread_mutex_t	*dead_lock;
 }	t_philo;
 
 
-//-----------------------------------------------SRC
-int		main(int argc, char **argv);
-int		check_valid_values(int argc, char **argv);
-void	init_table(t_table *table, char **argv, pthread_mutex_t *forks);
-int		init_forks(t_table *table);
-void	init_philos(t_table *table, t_philo *philos);
-int		create_threads(t_philo *philos);
-void	*do_routine(void *param);
-void	free_table(t_philo *philos);
-size_t	get_time(void);
-int	someone_has_died(t_philo *philo, int *id);
-void	status_msg(t_philo **philo, int *id, char *string, int time_to_sleep);
+//-----------------------------------------------INIT
+int			main(int argc, char **argv);
+void		check_valid_values(int argc, char **argv);
+int			init_table(t_table *table, pthread_mutex_t *forks, char **argv);
+void		init_philos(t_table *table, t_philo *philos, char **argv);
+//-----------------------------------------------THREADS
+int			create_threads(t_philo *philos);
+void		*do_routine(void *param);
+int			someone_died(t_philo *philo);
+void		status_msg(t_philo *philo, int *id, char *string);
 //------------------------------------------------UTILS
-long		ft_atoi(const char *str);
+void		ft_usleep(size_t time_to_usleep);
+size_t		get_time(void);
+long		ft_atol(const char *str);
+void		free_table(t_philo *philo);
 
 #endif
+

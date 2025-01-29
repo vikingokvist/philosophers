@@ -25,6 +25,7 @@ int	create_threads(t_philo *philo)
 			printf(ERR_THREAD_CREATE);
 			return (1);
 		}
+		ft_usleep(1);
 		i++;
 	}
 	j = 0;

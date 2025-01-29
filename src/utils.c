@@ -12,15 +12,13 @@
 
 #include "philosophers.h"
 
-int	someone_has_died(t_philo *philo, int *id)
+void	ft_usleep(size_t time_to_usleep)
 {
-	if (philo[*id].last_meal >= philo->table->time_to_die)
-	{
-		status_msg(&philo, id, MSG_DEATH, 0);
-		free_table(philo);
-		return (1);
-	}
-	return (0);
+	size_t	start;
+
+	start = get_time();
+	while ((get_time() - start) < time_to_usleep)
+		usleep(500);
 }
 
 size_t	get_time(void)
@@ -32,7 +30,7 @@ size_t	get_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-long	ft_atoi(const char *str)
+long	ft_atol(const char *str)
 {
 	long	res;
 	int		minus;
@@ -55,18 +53,16 @@ long	ft_atoi(const char *str)
 	return (res * minus);
 }
 
-int	check_valid_values(int argc, char **argv)
+void	free_table(t_philo *philo)
 {
-	if (ft_atoi(argv[1]) > PHILOS_MAX || ft_atoi(argv[1]) <= 0)
-		return (1);
-	if (ft_atoi(argv[2]) <= 0)
-		return (1);
-	if (ft_atoi(argv[3]) <= 0)
-		return (1);
-	if (ft_atoi(argv[4]) <= 0)
-		return (1);
-	if (argc == 6 && ft_atoi(argv[5]) <= 0)
-		return (1);
-	return (0);
-}
+	int	i;
 
+	i = 0;
+	pthread_mutex_destroy(philo->write_lock);
+	while (i < philo->table->philosophers_count)
+	{
+		pthread_mutex_destroy(&philo->table->forks[i]);
+		i++;
+	}
+	exit(EXIT_SUCCESS);
+}
