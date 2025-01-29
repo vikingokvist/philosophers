@@ -18,10 +18,10 @@ int	main(int argc, char **argv)
 	t_philo			philos[PHILOS_MAX];
 	pthread_mutex_t	forks[PHILOS_MAX];
 
-	// if (argc >= 5 && argc <= 6)
-	// 	return (write(1, "Wrong amount of arguments\n", 27), 1);
+	if (argc != 6 || argc != 6)
+		return (printf(ERR_ARGS), 1);
 	if (check_valid_values(argc, argv))
-		return (write(1, "Wrong values\n", 14), 1);
+		return (printf(ERR_ARGS_VALID), 1);
 	init_table(&table, argv, forks);
 	init_philos(&table, philos);
 	init_forks(&table);

@@ -21,15 +21,20 @@ int	create_threads(t_philo *philo)
 	while (i < philo->table->philosophers_count)
 	{
 		if (pthread_create(&philo[i].thread, NULL, &do_routine, (void *)&philo[i]) != 0)
-			return (printf("Failed to create thread.\n"), 1);
+		{
+			printf(ERR_THREAD_CREATE);
+			return (1);
+		}
 		i++;
 	}
-	// Gestionar Muerteres
 	j = 0;
 	while (j < philo->table->philosophers_count)
 	{
 		if (pthread_join(philo[j].thread, NULL) != 0)
-			return (printf("Failed joining threads.\n"), 1);
+		{
+			printf(ERR_THREAD_JOIN);
+			return (1);
+		}
 		j++;
 	}
 	return (0);

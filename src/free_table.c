@@ -17,6 +17,7 @@ void	free_table(t_philo *philos)
 	int	i;
 
 	i = 0;
+	pthread_mutex_destroy(philos->write_lock);
 	while (i < philos->table->philosophers_count)
 	{
 		pthread_mutex_destroy(&philos->table->forks[i]);

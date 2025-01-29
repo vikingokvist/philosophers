@@ -2,8 +2,8 @@ NAME = philo
 
 #CFLAGS----------------------------------------------------------------------------------
 
-CC 	= cc
-CFLAGS 	= -Wall -Wextra -Werror -I ./includes
+CC 	= gcc
+CFLAGS 	= -Wall -Wextra -Werror -I ./includes -g3 -fsanitize=thread
 RM	= rm -rf
 NOPRINT = --no-print-directory
 
