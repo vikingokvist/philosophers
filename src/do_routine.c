@@ -14,8 +14,8 @@
 
 void	status_msg(t_philo *philo, int *id, char *string)
 {
-	size_t time;
-	
+	size_t	time;
+
 	pthread_mutex_lock(philo->write_lock);
 	time = get_time() - philo->start_time;
 	printf("%zu %d %s\n", time, *id, string);
@@ -40,7 +40,7 @@ void	ph_eat(t_philo *philo)
 	pthread_mutex_unlock(philo->l_fork);
 }
 
-int		someone_died(t_philo *philo)
+int	someone_died(t_philo *philo)
 {
 	pthread_mutex_lock(philo->dead_lock);
 	if (philo->table->someone_died == 1)
@@ -54,7 +54,7 @@ int		someone_died(t_philo *philo)
 
 void	*do_routine(void *param)
 {
-	t_philo *philo;
+	t_philo	*philo;
 
 	philo = (t_philo *)param;
 	if (philo->id % 2 == 0)

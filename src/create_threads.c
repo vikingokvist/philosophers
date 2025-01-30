@@ -20,10 +20,10 @@ int	create_threads(t_philo *philo)
 	i = 0;
 	while (i < philo->table->philosophers_count)
 	{
-		if (pthread_create(&philo[i].thread, NULL, &do_routine, (void *)&philo[i]) != 0)
+		if (pthread_create(&philo[i].thread, NULL, &do_routine,
+				(void *)&philo[i]) != 0)
 		{
-			printf(ERR_THREAD_CREATE);
-			return (1);
+			return (printf(ERR_THREAD_CREATE), 1);
 		}
 		ft_usleep(1);
 		i++;
