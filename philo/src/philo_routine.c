@@ -10,21 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "./philosophers.h"
 
 void	*philo_routine(void *param)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)param;
-	if (philo->id % 2 != 0)
-		ft_usleep(philo->time_to_eat * 500);
-	while (!someone_died(philo))
+	if (philo->id % 2 == 0)
+		ft_usleep(1);
+	while (1)
 	{
-		status_msg(philo, &philo->id, MSG_THINK);
+		if (someone_died(philo))
+			break ;
 		ph_eat(philo);
 		status_msg(philo, &philo->id, MSG_SLEEP);
 		ft_usleep(philo->time_to_sleep);
+		status_msg(philo, &philo->id, MSG_THINK);
 	}
 	return (NULL);
 }
@@ -63,10 +65,9 @@ int	someone_died(t_philo *philo)
 	if (philo->table->someone_died == 1)
 	{
 		pthread_mutex_unlock(philo->dead_lock);
+		free_table(philo);
 		return (1);
 	}
 	pthread_mutex_unlock(philo->dead_lock);
 	return (0);
 }
-
-

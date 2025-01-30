@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "./philosophers.h"
 
 int	check_valid_values(char **argv)
 {
@@ -24,7 +24,7 @@ int	check_valid_values(char **argv)
 		while (argv[i][j])
 		{
 			if (!ft_isdigit(argv[i][j]))
-				return (1);
+				return (printf(ERR_ARGS_VALID), 1);
 			j++;
 		}
 		i++;
@@ -32,10 +32,10 @@ int	check_valid_values(char **argv)
 	i = 1;
 	while (argv[i])
 	{
-		if (i == 0 && (ft_atol(argv[i]) > PHILOS_MAX || ft_atol(argv[1]) <= 0))
-			return (1);
-		else if (ft_atol(argv[1]) <= 0 || ft_atol(argv[1]) >= UINT_MAX)
-			return (1);
+		if (i == 1 && (ft_atol(argv[i]) > PHILOS_MAX || ft_atol(argv[i]) <= 0))
+			return (printf(ERR_ARGS_PHILO_MAX), 1);
+		else if (ft_atol(argv[i]) <= 0 || ft_atol(argv[i]) >= UINT_MAX)
+			return (printf(ERR_ARGS_VALID), 1);
 		i++;
 	}
 	return (0);
@@ -48,7 +48,7 @@ int	init_table(t_table *table, pthread_mutex_t *forks, char **argv)
 	table->philosophers_count = ft_atol(argv[1]);
 	table->someone_died = 0;
 	table->forks = forks;
-	table->had_all_meals = -1;
+	table->had_all_meals = 0;
 	if (pthread_mutex_init(&table->dead_lock, NULL) != 0)
 		return (printf(ERR_MUTEX_INIT), 1);
 	if (pthread_mutex_init(&table->write_lock, NULL) != 0)
@@ -65,13 +65,12 @@ int	init_table(t_table *table, pthread_mutex_t *forks, char **argv)
 	return (0);
 }
 
-void	init_philos(t_table *table, t_philo *philos, char **argv)
+void	init_philos(t_table *table, t_philo *philos, char **argv,
+		size_t start_time)
 {
 	int		i;
-	size_t	start_time;
 
 	i = 0;
-	start_time = get_time();
 	while (i < table->philosophers_count)
 	{
 		philos[i].thread = 0;
@@ -79,7 +78,9 @@ void	init_philos(t_table *table, t_philo *philos, char **argv)
 		philos[i].time_to_die = ft_atol(argv[2]);
 		philos[i].time_to_eat = ft_atol(argv[3]);
 		philos[i].time_to_sleep = ft_atol(argv[4]);
-		philos[i].meals_to_have = ft_atol(argv[5]);
+		philos[i].meals_to_have = 0;
+		if (argv[5])
+			philos[i].meals_to_have = ft_atol(argv[5]);
 		philos[i].meals_had = 0;
 		philos[i].start_time = start_time;
 		philos[i].last_meal = start_time;

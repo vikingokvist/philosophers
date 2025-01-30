@@ -71,5 +71,5 @@ void	free_table(t_philo *philo)
 		pthread_mutex_destroy(&philo->table->forks[i]);
 		i++;
 	}
-	exit(1);
+	exit(0);
 }

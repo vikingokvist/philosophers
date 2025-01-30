@@ -23,7 +23,8 @@
 # define PHILOS_MAX 200
 # define ERR_ARGS "Usage:\n  ./philo <number_of_philosopher> <time_to_die> %s"
 # define ERR_ARGS2 "<time_to_eat> <time_to_sleep> [meals_to_have]\n"
-# define ERR_ARGS_VALID "Values must be comprised of digits from 0 to UINT_MAX"
+# define ERR_ARGS_VALID "Values must be digits from 0 to UINT_MAX\n"
+# define ERR_ARGS_PHILO_MAX "<number_of_philosopher> cannot exceed 200\n"
 # define ERR_THREAD_CREATE "Failed to create thread.\n"
 # define ERR_THREAD_JOIN "Failed joining threads.\n"
 # define ERR_MUTEX_INIT "Failed to initialize mutex\n"
@@ -32,15 +33,15 @@
 # define MSG_THINK "is thinking"
 # define MSG_EAT "is eating"
 # define MSG_FORK "has taken a fork"
-# define MSG_DEATH "has died"
+# define MSG_DEATH "died"
 # define MSG_DONE "finished eating"
 
 typedef struct s_table
 {
 	int				philosophers_count;
 	int				someone_died;
-	int				had_all_meals;
-	pthread_t			table_thread;
+	size_t				had_all_meals;
+	pthread_t		table_thread;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	l_fork;
 	pthread_mutex_t	r_fork;
@@ -73,7 +74,8 @@ typedef struct s_philo
 int		main(int argc, char **argv);
 int		check_valid_values(char **argv);
 int		init_table(t_table *table, pthread_mutex_t *forks, char **argv);
-void	init_philos(t_table *table, t_philo *philos, char **argv);
+void	init_philos(t_table *table, t_philo *philos, char **argv,
+			size_t start_time);
 int		create_threads(t_philo *philos);
 //-----------------------------------------------PHILO ROUTINE
 void	*philo_routine(void *param);
