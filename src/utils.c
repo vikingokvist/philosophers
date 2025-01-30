@@ -30,6 +30,11 @@ size_t	get_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
+int	ft_isdigit(int c)
+{
+	return (c >= '0' && c <= '9');
+}
+
 long	ft_atol(const char *str)
 {
 	long	res;
@@ -58,11 +63,13 @@ void	free_table(t_philo *philo)
 	int	i;
 
 	i = 0;
+	pthread_mutex_destroy(philo->dead_lock);
+	pthread_mutex_destroy(philo->meal_lock);
 	pthread_mutex_destroy(philo->write_lock);
 	while (i < philo->table->philosophers_count)
 	{
 		pthread_mutex_destroy(&philo->table->forks[i]);
 		i++;
 	}
-	exit(EXIT_SUCCESS);
+	exit(1);
 }

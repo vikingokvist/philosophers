@@ -15,8 +15,8 @@ RESET := \033[0m
 
 #FILES------------------------------------------------------------------------------------
 
-SRCS = ./src/main.c ./src/init.c \
-	./src/create_threads.c ./src/utils.c ./src/do_routine.c
+SRCS = ./src/main.c ./src/init.c ./src/create_threads.c ./src/utils.c \
+	./src/philo_routine.c ./src/table_routine.c
 
 	
 #OBJS--------------------------------------------------------------------------------------

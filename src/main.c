@@ -18,27 +18,16 @@ int	main(int argc, char **argv)
 	t_philo			philos[PHILOS_MAX];
 	pthread_mutex_t	forks[PHILOS_MAX];
 
-	if (argc != 6 || argc != 6)
+	if (!(argc >= 5 && argc <= 6))
 		return (printf(ERR_ARGS, ERR_ARGS2), 1);
-	check_valid_values(argc, argv);
-	init_table(&table, forks, argv);
+	if (check_valid_values(argv))
+		return (1);
+	if (init_table(&table, forks, argv))
+		return (1);
 	init_philos(&table, philos, argv);
-	create_threads(philos);
+	if (create_threads(philos))
+		return (1);
 	free_table(philos);
 	return (0);
 }
 
-void	check_valid_values(int argc, char **argv)
-{
-	if (ft_atol(argv[1]) > PHILOS_MAX || ft_atol(argv[1]) <= 0)
-		return (printf(ERR_ARGS_VALID), exit(1));
-	else if (ft_atol(argv[2]) <= 0 || ft_atol(argv[2]) >= INT_MAX)
-		return (printf(ERR_ARGS_VALID), exit(1));
-	else if (ft_atol(argv[3]) <= 0 || ft_atol(argv[3]) >= INT_MAX)
-		return (printf(ERR_ARGS_VALID), exit(1));
-	else if (ft_atol(argv[4]) <= 0 || ft_atol(argv[4]) >= INT_MAX)
-		return (printf(ERR_ARGS_VALID), exit(1));
-	else if (argc == 6 && (ft_atol(argv[5]) <= 0
-			|| ft_atol(argv[5]) >= INT_MAX))
-		return (printf(ERR_ARGS_VALID), exit(1));
-}

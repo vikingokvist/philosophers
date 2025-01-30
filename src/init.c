@@ -12,14 +12,43 @@
 
 #include "philosophers.h"
 
+int	check_valid_values(char **argv)
+{
+	int	i;
+	int	j;
+
+	i = 1;
+	while (argv[i])
+	{
+		j = 0;
+		while (argv[i][j])
+		{
+			if (!ft_isdigit(argv[i][j]))
+				return (1);
+			j++;
+		}
+		i++;
+	}
+	i = 1;
+	while (argv[i])
+	{
+		if (i == 0 && (ft_atol(argv[i]) > PHILOS_MAX || ft_atol(argv[1]) <= 0))
+			return (1);
+		else if (ft_atol(argv[1]) <= 0 || ft_atol(argv[1]) >= UINT_MAX)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 int	init_table(t_table *table, pthread_mutex_t *forks, char **argv)
 {
 	int	i;
 
 	table->philosophers_count = ft_atol(argv[1]);
-	table->meals_had_by_philos = 0;
 	table->someone_died = 0;
 	table->forks = forks;
+	table->had_all_meals = -1;
 	if (pthread_mutex_init(&table->dead_lock, NULL) != 0)
 		return (printf(ERR_MUTEX_INIT), 1);
 	if (pthread_mutex_init(&table->write_lock, NULL) != 0)

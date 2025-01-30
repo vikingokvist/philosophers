@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   do_routine.c                                       :+:      :+:    :+:   */
+/*   philo_routine.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ctommasi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,14 +12,21 @@
 
 #include "philosophers.h"
 
-void	status_msg(t_philo *philo, int *id, char *string)
+void	*philo_routine(void *param)
 {
-	size_t	time;
+	t_philo	*philo;
 
-	pthread_mutex_lock(philo->write_lock);
-	time = get_time() - philo->start_time;
-	printf("%zu %d %s\n", time, *id, string);
-	pthread_mutex_unlock(philo->write_lock);
+	philo = (t_philo *)param;
+	if (philo->id % 2 != 0)
+		ft_usleep(philo->time_to_eat * 500);
+	while (!someone_died(philo))
+	{
+		status_msg(philo, &philo->id, MSG_THINK);
+		ph_eat(philo);
+		status_msg(philo, &philo->id, MSG_SLEEP);
+		ft_usleep(philo->time_to_sleep);
+	}
+	return (NULL);
 }
 
 void	ph_eat(t_philo *philo)
@@ -40,6 +47,16 @@ void	ph_eat(t_philo *philo)
 	pthread_mutex_unlock(philo->l_fork);
 }
 
+void	status_msg(t_philo *philo, size_t *id, char *string)
+{
+	size_t	time;
+
+	pthread_mutex_lock(philo->write_lock);
+	time = get_time() - philo->start_time;
+	printf("%zu %zu %s\n", time, *id, string);
+	pthread_mutex_unlock(philo->write_lock);
+}
+
 int	someone_died(t_philo *philo)
 {
 	pthread_mutex_lock(philo->dead_lock);
@@ -52,19 +69,4 @@ int	someone_died(t_philo *philo)
 	return (0);
 }
 
-void	*do_routine(void *param)
-{
-	t_philo	*philo;
 
-	philo = (t_philo *)param;
-	if (philo->id % 2 == 0)
-		usleep(1);
-	while (!someone_died(philo))
-	{
-		status_msg(philo, &philo->id, MSG_THINK);
-		ph_eat(philo);
-		status_msg(philo, &philo->id, MSG_SLEEP);
-		ft_usleep(philo->time_to_sleep);
-	}
-	return (NULL);
-}
