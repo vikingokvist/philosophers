@@ -35,23 +35,22 @@ void	ph_eat(t_philo *philo)
 	status_msg(philo, &philo->id, MSG_FORK);
 	pthread_mutex_lock(philo->r_fork);
 	status_msg(philo, &philo->id, MSG_FORK);
-	if (philo->table->had_all_meals == philo->table->philosophers_count)
+	status_msg(philo, &philo->id, MSG_EAT);
+	if (philo->table->had_all_meals == philo->table->philosophers_count && philo->table->someone_died != 1)
 	{
-		philo->table->someone_died = 1;
 		pthread_mutex_unlock(philo->r_fork);
 		pthread_mutex_unlock(philo->l_fork);
-		free_table(philo);
+		return ;
 	}
-	status_msg(philo, &philo->id, MSG_EAT);
 	pthread_mutex_lock(philo->meal_lock);
 	philo->is_eating = 1;
 	philo->last_meal = get_time();
 	philo->meals_had++;
 	if (philo->meals_had >= philo->meals_to_have)
 		philo->table->had_all_meals++;
-	pthread_mutex_unlock(philo->meal_lock);
 	ft_usleep(philo->time_to_eat);
 	philo->is_eating = 0;
+	pthread_mutex_unlock(philo->meal_lock);
 	pthread_mutex_unlock(philo->r_fork);
 	pthread_mutex_unlock(philo->l_fork);
 }
@@ -72,10 +71,11 @@ int	someone_died(t_philo *philo)
 	if ((get_time() - philo->last_meal) > philo->time_to_die
 		&& philo->is_eating == 0)
 		philo->table->someone_died = 1;
-	if (philo->table->someone_died == 1)
+	if (philo->table->someone_died == 1 || philo->table->had_all_meals == 1)
 	{
-		status_msg(philo, &philo->id, MSG_DEATH);
 		pthread_mutex_unlock(philo->dead_lock);
+		if (philo->table->someone_died == 1)
+			status_msg(philo, &philo->id, MSG_DEATH);
 		free_table(philo);
 		return (1);
 	}
