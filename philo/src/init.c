@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./philosophers.h"
+#include "../include/philosophers.h"
 
 int	check_valid_values(char **argv)
 {
@@ -43,7 +43,7 @@ int	check_valid_values(char **argv)
 
 int	init_table(t_table *table, pthread_mutex_t *forks, char **argv)
 {
-	int	i;
+	size_t	i;
 
 	table->philosophers_count = ft_atol(argv[1]);
 	table->someone_died = 0;
@@ -68,7 +68,7 @@ int	init_table(t_table *table, pthread_mutex_t *forks, char **argv)
 void	init_philos(t_table *table, t_philo *philos, char **argv,
 		size_t start_time)
 {
-	int		i;
+	size_t		i;
 
 	i = 0;
 	while (i < table->philosophers_count)

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "../include/philosophers.h"
 
 void	ft_usleep(size_t time_to_usleep)
 {
@@ -60,7 +60,7 @@ long	ft_atol(const char *str)
 
 void	free_table(t_philo *philo)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	pthread_mutex_destroy(philo->dead_lock);

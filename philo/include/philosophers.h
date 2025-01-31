@@ -38,10 +38,9 @@
 
 typedef struct s_table
 {
-	int				philosophers_count;
+	size_t			philosophers_count;
 	int				someone_died;
-	size_t				had_all_meals;
-	pthread_t		table_thread;
+	size_t			had_all_meals;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	l_fork;
 	pthread_mutex_t	r_fork;
@@ -82,9 +81,6 @@ void	*philo_routine(void *param);
 void	status_msg(t_philo *philo, size_t *id, char *string);
 void	ph_eat(t_philo *philo);
 int		someone_died(t_philo *philo);
-//-----------------------------------------------PHILO ROUTINE
-void	*table_routine(void *param);
-int		all_finished_eating(t_philo *philo);
 //------------------------------------------------UTILS
 void	ft_usleep(size_t time_to_usleep);
 size_t	get_time(void);

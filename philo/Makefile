@@ -3,7 +3,7 @@ NAME = philo
 #CFLAGS----------------------------------------------------------------------------------
 
 CC 	= cc
-CFLAGS 	= -Wall -Wextra -Werror -I ./includes
+CFLAGS 	= -Wall -Wextra -Werror -I ./include
 RM	= rm -rf
 NOPRINT = --no-print-directory
 
