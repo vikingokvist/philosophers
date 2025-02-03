@@ -12,13 +12,19 @@
 
 #include "../include/philosophers.h"
 
+void	wait_for_threads(size_t start_time)
+{
+	while (get_time() < start_time)
+		continue ;
+}
+
 void	ft_usleep(size_t time_to_usleep)
 {
-	size_t	start;
+	size_t	wake_up;
 
-	start = get_time();
-	while ((get_time() - start) < time_to_usleep)
-		usleep(500);
+	wake_up = get_time() + time_to_usleep;
+	while (get_time() < wake_up)
+		usleep(100);
 }
 
 size_t	get_time(void)
@@ -58,18 +64,4 @@ long	ft_atol(const char *str)
 	return (res * minus);
 }
 
-void	free_table(t_philo *philo)
-{
-	size_t	i;
 
-	i = 0;
-	pthread_mutex_destroy(philo->dead_lock);
-	pthread_mutex_destroy(philo->meal_lock);
-	pthread_mutex_destroy(philo->write_lock);
-	while (i < philo->table->philosophers_count)
-	{
-		pthread_mutex_destroy(&philo->table->forks[i]);
-		i++;
-	}
-	exit(0);
-}

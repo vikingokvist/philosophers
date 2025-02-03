@@ -12,59 +12,78 @@
 
 #include "../include/philosophers.h"
 
-// int	all_finished_eating(t_philo *philo)
-// {
-// 	int	i;
+void	*table_routine(void *param)
+{
+	t_philo	*philo;
 
-// 	i = 0;
-// 	while (i < philo->table->philosophers_count)
-// 	{
-// 		pthread_mutex_lock(philo->meal_lock);
-// 		printf("meals had [%d] %zu\n", i, philo[i].meals_had);
-// 		if (philo[i].meals_had >= philo[i].meals_to_have)
-// 			philo->table->had_all_meals++;
-// 		pthread_mutex_unlock(philo->meal_lock);
-// 		i++;
-// 	}
-// 	if (philo->table->had_all_meals == philo[0].meals_to_have)
-// 	{
-// 		philo->table->someone_died = 1;
-// 		return (1);
-// 	}
-// 	return (0);
-// }
+	philo = (t_philo *)param;
+	wait_for_threads(philo->start_time);
+	while (1)
+	{
+		if (dead_or_finished_eating(philo))
+			return (NULL);
+		usleep(1000);
+	}
+	return (NULL);
+}
 
-// int	anyone_died(t_philo *philo)
-// {
-// 	int	i;
+int dead_or_finished_eating(t_philo *philo)
+{
+	size_t  i;
+	int     all_ate;
 
-// 	i = 0;
-// 	while (i < philo->table->philosophers_count)
-// 	{
-// 		pthread_mutex_lock(philo->dead_lock);
-// 		if ((get_time() - philo[i].last_meal) > philo[i].time_to_die
-// 				&& philo[i].is_eating == 0)
-// 		{
-// 			status_msg(philo, &philo->id, MSG_DEATH);
-// 			philo->table->someone_died = 1;
-// 			pthread_mutex_unlock(philo->dead_lock);
-// 			return (1);
-// 		}
-// 		pthread_mutex_unlock(philo->dead_lock);
-// 		i++;
-// 	}
-// 	return (0);
-// }
+	i = 0;
+	all_ate = 1;
+	while (i < philo->table->philosophers_count)
+	{
+		pthread_mutex_lock(philo->meal_lock);
+		if (anyone_died(&philo[i]))
+		{
+			pthread_mutex_unlock(philo[i].meal_lock);
+			return (1);
+		}
+		if (philo[i].meals_to_have > 0 && philo[i].meals_had < philo[i].meals_to_have)
+			all_ate = 0;
+		pthread_mutex_unlock(philo->meal_lock);
+		i++;
+	}
+	if (philo[0].meals_to_have > 0 && all_ate == 1)
+	{
+		stop_simulation(philo);
+		return (1);
+	}
+	return (0);
+}
 
-// void	*table_routine(void *param)
-// {
-// 	t_philo	*philo;
+int	anyone_died(t_philo *philo)
+{
+	pthread_mutex_lock(philo->dead_lock);
+	if ((get_time() - philo->last_meal) > philo->time_to_die)
+	{
+		stop_simulation(philo);
+		status_msg(philo, &philo->id, MSG_DEATH);
+		pthread_mutex_unlock(philo->dead_lock);
+		return (1);
+	}
+	pthread_mutex_unlock(philo->dead_lock);
+	return (0);
+}
 
-// 	philo = (t_philo *)param;
-// 	while (1)
-// 	{
-// 		if (anyone_died(philo) || all_finished_eating(philo))
-// 			break ;
-// 	}
-// 	return (NULL);
-// }
+int	simulation_continues(t_philo *philo)
+{
+	int	state;
+
+	state = 1;
+	pthread_mutex_lock(philo->sim_lock);
+	if (philo->table->simulation_continues == 0)
+		state = 0;
+	pthread_mutex_unlock(philo->sim_lock);
+	return (state);
+}
+
+void	stop_simulation(t_philo *philo)
+{
+	pthread_mutex_lock(philo->sim_lock);
+	philo->table->simulation_continues = 0;
+	pthread_mutex_unlock(philo->sim_lock);
+}

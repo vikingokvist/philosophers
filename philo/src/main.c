@@ -14,21 +14,21 @@
 
 int	main(int argc, char **argv)
 {
-	size_t			start_time;
 	t_table			table;
 	t_philo			philos[PHILOS_MAX];
 	pthread_mutex_t	forks[PHILOS_MAX];
+	size_t			start_time;
 
 	if (!(argc >= 5 && argc <= 6))
-		return (printf(ERR_ARGS, ERR_ARGS2), 1);
+		return (printf(ERR_ARGS), 1);
 	if (check_valid_values(argv))
 		return (1);
 	if (init_table(&table, forks, argv))
-		return (free_table(philos), 1);
-	start_time = get_time();
+		return (1);
+	start_time = get_time() + (table.philosophers_count * 20);
 	init_philos(&table, philos, argv, start_time);
 	if (create_threads(philos))
-		return (free_table(philos), 1);
-	free_table(philos);
+		return (1);
+	join_and_destroy_threads(philos);
 	return (0);
 }
