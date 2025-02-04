@@ -17,7 +17,7 @@ void	*philo_routine(void *param)
 	t_philo	*philo;
 
 	philo = (t_philo *)param;
-	wait_for_threads(philo, philo->start_time);
+	wait_for_threads(philo->start_time);
 	if (philo->table->philosophers_count == 1)
 		return (one_philosopher(philo));
 	if (philo->id % 2 != 0)

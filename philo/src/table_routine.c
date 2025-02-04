@@ -17,7 +17,7 @@ void	*table_routine(void *param)
 	t_philo	*philo;
 
 	philo = (t_philo *)param;
-	wait_for_threads(philo, philo->start_time);
+	wait_for_threads(philo->start_time);
 	while (1)
 	{
 		if (dead_or_finished_eating(philo))

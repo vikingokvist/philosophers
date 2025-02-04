@@ -95,7 +95,7 @@ int		anyone_died(t_philo *philo);
 int		simulation_continues(t_philo *philo);
 void	stop_simulation(t_philo *philo);
 //-----------------------------------------------UTILS
-void	wait_for_threads(t_philo *philo, size_t start_time);
+void	wait_for_threads(size_t start_time);
 void	ft_usleep(t_philo *philo, size_t time_to_usleep);
 size_t	get_time(void);
 long	ft_atol(const char *str);

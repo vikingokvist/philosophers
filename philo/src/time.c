@@ -12,9 +12,8 @@
 
 #include "../include/philosophers.h"
 
-void	wait_for_threads(t_philo *philo, size_t start_time)
+void	wait_for_threads(size_t start_time)
 {
-	(void)philo;
 	while (get_time() < start_time)
 		continue ;
 }
