@@ -84,7 +84,7 @@ void	init_philos(t_table *table, t_philo *philos, char **argv,
 		philos[i].table = table;
 		philos[i].l_fork = &table->forks[i];
 		philos[i].r_fork = &table->forks[(i + 1) % table->philosophers_count];
-		if (philos[i].id % 2 == 0)
+		if (philos[i].id % 2 != 0)
 		{
 			philos[i].l_fork = &table->forks[(i + 1) % table->philosophers_count];
 			philos[i].r_fork = &table->forks[i];

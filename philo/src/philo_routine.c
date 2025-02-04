@@ -21,7 +21,7 @@ void	*philo_routine(void *param)
 	philo->last_meal = philo->start_time;
 	pthread_mutex_unlock(philo->meal_lock);
 	wait_for_threads(philo->start_time);
-	if (philo->id % 2 == 0)
+	if (philo->id % 2 != 0)
 		precise_think(philo, 1);
 	while (simulation_continues(philo))
 	{

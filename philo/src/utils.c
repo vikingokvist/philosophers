@@ -33,7 +33,7 @@ size_t	get_time(void)
 
 	if (gettimeofday(&time, NULL) == -1)
 		return (printf(ERR_TIME), -1);
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
 int	ft_isdigit(int c)
