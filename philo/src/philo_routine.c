@@ -17,16 +17,15 @@ void	*philo_routine(void *param)
 	t_philo	*philo;
 
 	philo = (t_philo *)param;
-	pthread_mutex_lock(philo->meal_lock);
-	philo->last_meal = philo->start_time;
-	pthread_mutex_unlock(philo->meal_lock);
-	wait_for_threads(philo->start_time);
+	wait_for_threads(philo, philo->start_time);
+	if (philo->table->philosophers_count == 1)
+		return (one_philosopher(philo));
 	if (philo->id % 2 != 0)
-		precise_think(philo, 1);
+		ft_usleep(philo, 1);
 	while (simulation_continues(philo))
 	{
 		eat_and_sleep(philo);
-		precise_think(philo, 0);
+		precise_think(philo);
 	}
 	return (NULL);
 }
@@ -41,7 +40,7 @@ void	eat_and_sleep(t_philo *philo)
 	pthread_mutex_lock(philo->meal_lock);
 	philo->last_meal = get_time();
 	pthread_mutex_unlock(philo->meal_lock);
-	ft_usleep(philo->time_to_eat);
+	ft_usleep(philo, philo->time_to_eat);
 	if (simulation_continues(philo))
 	{
 		pthread_mutex_lock(philo->meal_lock);
@@ -49,35 +48,42 @@ void	eat_and_sleep(t_philo *philo)
 		pthread_mutex_unlock(philo->meal_lock);
 	}
 	status_msg(philo, &philo->id, MSG_SLEEP);
-	pthread_mutex_unlock(philo->r_fork);
 	pthread_mutex_unlock(philo->l_fork);
-	ft_usleep(philo->time_to_sleep);
+	pthread_mutex_unlock(philo->r_fork);
+	ft_usleep(philo, philo->time_to_sleep);
 }
 
-void	precise_think(t_philo *philo, int mod)
+void	precise_think(t_philo *philo)
 {
-	long	think;
+	size_t	time;
 
-	pthread_mutex_lock(philo->meal_lock);
-	think = (philo->time_to_die - (get_time() - philo->last_meal) - philo->time_to_eat) / 2;
-	pthread_mutex_unlock(philo->meal_lock);
-	if (think < 0)
-		think = 0;
-	if (think == 0 && mod == 1)
-		think = 1;
-	if (think > 600)
-		think = 200;
-	if (mod == 0)
+	pthread_mutex_lock(philo->dead_lock);
+	time = get_time();
+	ft_usleep(philo, 1);
+	if (ft_sqrt(time - philo->last_meal)
+		< ft_sqrt(time - philo->start_time + philo->time_to_die))
 		status_msg(philo, &philo->id, MSG_THINK);
-	ft_usleep(think);
+	pthread_mutex_unlock(philo->dead_lock);
 }
 
 void	status_msg(t_philo *philo, size_t *id, char *string)
 {
 	size_t	time;
 
+	if (!simulation_continues(philo))
+		return ;
 	pthread_mutex_lock(philo->write_lock);
 	time = get_time() - philo->start_time;
 	printf("%zu %zu %s", time, *id, string);
 	pthread_mutex_unlock(philo->write_lock);
+}
+
+void	*one_philosopher(t_philo *philo)
+{
+	pthread_mutex_lock(philo->l_fork);
+	status_msg(philo, &philo->id, MSG_FORK);
+	ft_usleep(philo, philo->time_to_die);
+	status_msg(philo, &philo->id, MSG_DEATH);
+	pthread_mutex_unlock(philo->l_fork);
+	return (NULL);
 }

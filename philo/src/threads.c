@@ -27,7 +27,8 @@ int	create_threads(t_philo *philo)
 		}
 		i++;
 	}
-	if (pthread_create(&philo->table->table_thread, NULL, &table_routine, (void *)philo) != 0)
+	if (pthread_create(&philo->table->table_thread, NULL,
+			&table_routine, (void *)philo) != 0)
 	{
 		printf(ERR_THREAD_CREATE);
 		return (1);
@@ -50,7 +51,7 @@ void	join_and_destroy_threads(t_philo *philo)
 	{
 		printf(ERR_THREAD_JOIN);
 	}
-	pthread_mutex_destroy(philo->dead_lock);
+	pthread_mutex_destroy(philo->sim_lock);
 	pthread_mutex_destroy(philo->meal_lock);
 	pthread_mutex_destroy(philo->write_lock);
 	i = 0;

@@ -22,8 +22,8 @@
 
 # define PHILOS_MAX 200
 
-# define ERR_ARGS "Usage:\n  ./philo <number_of_philosopher> <time_to_die>"\
-"<time_to_eat> <time_to_sleep> [meals_to_have]\n"
+# define ERR_ARGS "Usage:\n  ./philo <number_of_philosopher> <time_to_die> %s"
+# define ERR_ARGS2 "<time_to_eat> <time_to_sleep> [meals_to_have]\n"
 # define ERR_ARGS_VALID "Values must be digits from 0 to UINT_MAX\n"
 # define ERR_ARGS_PHILO_MAX "<number_of_philosopher> cannot exceed 200\n"
 # define ERR_THREAD_CREATE "Failed to create thread.\n"
@@ -31,13 +31,11 @@
 # define ERR_MUTEX_INIT "Failed to initialize mutex\n"
 # define ERR_TIME "Error getting time\n"
 
-
 # define MSG_SLEEP "is sleeping\n"
 # define MSG_THINK "is thinking\n"
 # define MSG_EAT "is eating\n"
 # define MSG_FORK "has taken a fork\n"
 # define MSG_DEATH "died\n"
-
 
 typedef struct s_table
 {
@@ -50,8 +48,8 @@ typedef struct s_table
 	pthread_mutex_t	r_fork;
 	pthread_mutex_t	write_lock;
 	pthread_mutex_t	meal_lock;
-	pthread_mutex_t	dead_lock;
 	pthread_mutex_t	sim_lock;
+	pthread_mutex_t	dead_lock;
 }	t_table;
 
 typedef struct s_philo
@@ -71,24 +69,25 @@ typedef struct s_philo
 	pthread_mutex_t		*r_fork;
 	pthread_mutex_t		*write_lock;
 	pthread_mutex_t		*meal_lock;
-	pthread_mutex_t		*dead_lock;
 	pthread_mutex_t		*sim_lock;
+	pthread_mutex_t		*dead_lock;
 }	t_philo;
 
 //-----------------------------------------------INIT
 int		main(int argc, char **argv);
 int		check_valid_values(char **argv);
 int		init_table(t_table *table, pthread_mutex_t *forks, char **argv);
-void	init_philos(t_table *table, t_philo *philos, char **argv,
-			size_t start_time);
+void	init_philos(t_table *table, t_philo *philos, char **argv);
+void	set_forks(t_philo *philo, t_table *table, int i);
 //-----------------------------------------------THREADS
 int		create_threads(t_philo *philos);
 void	join_and_destroy_threads(t_philo *philo);
 //-----------------------------------------------PHILO ROUTINE
 void	*philo_routine(void *param);
 void	eat_and_sleep(t_philo *philo);
-void	precise_think(t_philo *philo, int mod);
+void	precise_think(t_philo *philo);
 void	status_msg(t_philo *philo, size_t *id, char *string);
+void	*one_philosopher(t_philo *philo);
 //-----------------------------------------------TABLE ROUTINE
 void	*table_routine(void *param);
 int		dead_or_finished_eating(t_philo *philo);
@@ -96,10 +95,11 @@ int		anyone_died(t_philo *philo);
 int		simulation_continues(t_philo *philo);
 void	stop_simulation(t_philo *philo);
 //-----------------------------------------------UTILS
-void	wait_for_threads(size_t start_time);
-void	ft_usleep(size_t time_to_usleep);
+void	wait_for_threads(t_philo *philo, size_t start_time);
+void	ft_usleep(t_philo *philo, size_t time_to_usleep);
 size_t	get_time(void);
 long	ft_atol(const char *str);
 int		ft_isdigit(int c);
+size_t	ft_sqrt(size_t nb);
 
 #endif
