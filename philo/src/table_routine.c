@@ -56,12 +56,15 @@ int	dead_or_finished_eating(t_philo *philo)
 
 int	anyone_died(t_philo *philo)
 {
+	pthread_mutex_lock(philo->dead_lock);
 	if ((get_time() - philo->last_meal) > philo->time_to_die)
 	{
 		status_msg(philo, &philo->id, MSG_DEATH);
 		stop_simulation(philo);
+		pthread_mutex_unlock(philo->dead_lock);
 		return (1);
 	}
+	pthread_mutex_unlock(philo->dead_lock);
 	return (0);
 }
 

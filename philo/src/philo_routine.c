@@ -68,7 +68,7 @@ void	status_msg(t_philo *philo, size_t *id, char *string)
 		return ;
 	pthread_mutex_lock(philo->write_lock);
 	time = get_time() - philo->start_time;
-	printf("%zu %zu %s", time, *id, string);
+	printf("%zu %zu %s", time , *id, string);
 	pthread_mutex_unlock(philo->write_lock);
 }
 
