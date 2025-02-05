@@ -49,7 +49,8 @@ typedef struct s_table
 	pthread_mutex_t	write_lock;
 	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	sim_lock;
-	pthread_mutex_t	dead_lock;
+	pthread_mutex_t	sleep_lock;
+	pthread_mutex_t	wait_lock;
 }	t_table;
 
 typedef struct s_philo
@@ -70,12 +71,12 @@ typedef struct s_philo
 	pthread_mutex_t		*write_lock;
 	pthread_mutex_t		*meal_lock;
 	pthread_mutex_t		*sim_lock;
-	pthread_mutex_t		*dead_lock;
+	pthread_mutex_t		*sleep_lock;
+	pthread_mutex_t		*wait_lock;
 }	t_philo;
 
 //-----------------------------------------------INIT
 int		main(int argc, char **argv);
-int		check_valid_values(char **argv);
 int		init_table(t_table *table, pthread_mutex_t *forks, char **argv);
 void	init_philos(t_table *table, t_philo *philos, char **argv);
 void	set_forks(t_philo *philo, t_table *table, int i);
@@ -95,11 +96,10 @@ int		anyone_died(t_philo *philo);
 int		simulation_continues(t_philo *philo);
 void	stop_simulation(t_philo *philo);
 //-----------------------------------------------UTILS
-void	wait_for_threads(size_t start_time);
-void	ft_usleep(t_philo *philo, size_t time_to_usleep);
+int		check_valid_values(char **argv);
+int		ft_isdigit(int c);
 size_t	get_time(void);
 long	ft_atol(const char *str);
-int		ft_isdigit(int c);
-size_t	ft_sqrt(size_t nb);
+void	ft_usleep(t_philo *philo, size_t time_to_usleep);
 
 #endif

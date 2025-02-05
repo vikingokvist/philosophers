@@ -12,6 +12,28 @@
 
 #include "../include/philosophers.h"
 
+void	ft_usleep(t_philo *philo, size_t time_to_usleep)
+{
+	size_t	wake_up;
+
+	wake_up = get_time() + time_to_usleep;
+	while (get_time() < wake_up)
+	{
+		if (!simulation_continues(philo))
+			break ;
+		usleep(100);
+	}
+}
+
+size_t	get_time(void)
+{
+	struct timeval	time;
+
+	if (gettimeofday(&time, NULL) == -1)
+		return (printf(ERR_TIME), -1);
+	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+}
+
 int	check_valid_values(char **argv)
 {
 	int	i;
@@ -67,30 +89,4 @@ long	ft_atol(const char *str)
 		str++;
 	}
 	return (res * minus);
-}
-
-size_t	ft_sqrt(size_t nb)
-{
-	size_t	left;
-	size_t	right;
-	size_t	mid;
-	size_t	result;
-
-	if (nb <= 0)
-		return (0);
-	left = 1;
-	right = nb;
-	result = 0;
-	while (left <= right)
-	{
-		mid = left + (right - left) / 2;
-		if (mid < nb / mid)
-		{
-			result = mid;
-			left = mid + 1;
-		}
-		else
-			right = mid - 1;
-	}
-	return (result);
 }

@@ -17,7 +17,6 @@ void	*philo_routine(void *param)
 	t_philo	*philo;
 
 	philo = (t_philo *)param;
-	wait_for_threads(philo->start_time);
 	if (philo->table->philosophers_count == 1)
 		return (one_philosopher(philo));
 	if (philo->id % 2 != 0)
@@ -55,15 +54,10 @@ void	eat_and_sleep(t_philo *philo)
 
 void	precise_think(t_philo *philo)
 {
-	size_t	time;
-
-	pthread_mutex_lock(philo->dead_lock);
-	time = get_time();
+	pthread_mutex_lock(philo->sleep_lock);
 	ft_usleep(philo, 1);
-	if (ft_sqrt(time - philo->last_meal)
-		< ft_sqrt(time - philo->start_time + philo->time_to_die))
-		status_msg(philo, &philo->id, MSG_THINK);
-	pthread_mutex_unlock(philo->dead_lock);
+	status_msg(philo, &philo->id, MSG_THINK);
+	pthread_mutex_unlock(philo->sleep_lock);
 }
 
 void	status_msg(t_philo *philo, size_t *id, char *string)

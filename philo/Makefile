@@ -16,7 +16,7 @@ RESET := \033[0m
 #FILES------------------------------------------------------------------------------------
 
 SRCS = ./src/main.c ./src/init.c ./src/threads.c ./src/utils.c \
-	./src/philo_routine.c ./src/table_routine.c ./src/time.c
+	./src/philo_routine.c ./src/table_routine.c
 
 	
 #OBJS--------------------------------------------------------------------------------------
