@@ -17,6 +17,7 @@ int	create_threads(t_philo *philo)
 	size_t	i;
 
 	i = 0;
+	sem_init(&philo->table->semaphore, 0, 1);
 	while (i < philo->table->philosophers_count)
 	{
 		if (pthread_create(&philo[i].thread, NULL,
@@ -51,14 +52,5 @@ void	join_and_destroy_threads(t_philo *philo)
 	{
 		printf(ERR_THREAD_JOIN);
 	}
-	pthread_mutex_destroy(philo->sim_lock);
-	pthread_mutex_destroy(philo->meal_lock);
-	pthread_mutex_destroy(philo->write_lock);
-	pthread_mutex_destroy(philo->sleep_lock);
-	i = 0;
-	while (i < philo->table->philosophers_count)
-	{
-		pthread_mutex_destroy(&philo->table->forks[i]);
-		i++;
-	}
+	sem_destroy(&philo->table->semaphore);
 }

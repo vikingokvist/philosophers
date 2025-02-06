@@ -19,6 +19,7 @@
 # include <pthread.h>
 # include <string.h>
 # include <sys/time.h>
+# include <semaphore.h>
 
 # define PHILOS_MAX 200
 
@@ -40,17 +41,10 @@
 typedef struct s_table
 {
 	pthread_t		table_thread;
+	sem_t			semaphore;
 	size_t			philosophers_count;
 	int				someone_died;
 	int				simulation_continues;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	l_fork;
-	pthread_mutex_t	r_fork;
-	pthread_mutex_t	write_lock;
-	pthread_mutex_t	meal_lock;
-	pthread_mutex_t	sim_lock;
-	pthread_mutex_t	sleep_lock;
-	pthread_mutex_t	wait_lock;
 }	t_table;
 
 typedef struct s_philo
@@ -66,18 +60,10 @@ typedef struct s_philo
 	size_t				last_meal;
 	pthread_t			thread;
 	t_table				*table;
-	pthread_mutex_t		*l_fork;
-	pthread_mutex_t		*r_fork;
-	pthread_mutex_t		*write_lock;
-	pthread_mutex_t		*meal_lock;
-	pthread_mutex_t		*sim_lock;
-	pthread_mutex_t		*sleep_lock;
-	pthread_mutex_t		*wait_lock;
 }	t_philo;
 
 //-----------------------------------------------INIT
 int		main(int argc, char **argv);
-int		init_table(t_table *table, pthread_mutex_t *forks, char **argv);
 void	init_philos(t_table *table, t_philo *philos, char **argv);
 void	set_forks(t_philo *philo, t_table *table, int i);
 //-----------------------------------------------THREADS
