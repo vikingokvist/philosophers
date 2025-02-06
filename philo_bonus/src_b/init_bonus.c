@@ -12,14 +12,36 @@
 
 #include "../include_b/philosophers_bonus.h"
 
+int	init_semaphores(t_table *table, sem_t *semaphores, char **argv)
+{
+	table->philosophers_count = ft_atol(argv[1]);
+	table->simulation_continues = 1;
+	table->semaphores = semaphores;
+	table->semaphores = sem_open("/semaphores", O_CREAT, 0644, table->philosophers_count);
+	if (table->semaphores == SEM_FAILED)
+		return (printf(ERR_SEM), 1);
+	table->meal_sem = sem_open("/meal_sem", O_CREAT, 0644, 1);
+	if (table->meal_sem == SEM_FAILED)
+		return (printf(ERR_SEM), 1);
+	table->dead_sem = sem_open("/dead_sem", O_CREAT, 0644, 1);
+	if (table->dead_sem == SEM_FAILED)
+		return (printf(ERR_SEM), 1);
+	table->sim_sem = sem_open("/sim_sem", O_CREAT, 0644, 1);
+	if (table->sim_sem == SEM_FAILED)
+		return (printf(ERR_SEM), 1);
+	table->write_sem = sem_open("/write_sem", O_CREAT, 0644, 1);
+	if (table->write_sem == SEM_FAILED)
+		return (printf(ERR_SEM), 1);
+
+}
+
 void	init_philos(t_table *table, t_philo *philo, char **argv)
 {
 	size_t		i;
 	size_t		start_time;
 
 	i = 0;
-	table->philosophers_count = ft_atol(argv[1]);
-	table->simulation_continues = 1;
+
 	start_time = get_time();
 	while (i < table->philosophers_count)
 	{
@@ -34,6 +56,10 @@ void	init_philos(t_table *table, t_philo *philo, char **argv)
 		philo[i].start_time = start_time;
 		philo[i].last_meal = start_time;
 		philo[i].table = table;
+		philo[i].sim_sem = table->sim_sem;
+		philo[i].dead_sem = table->dead_sem;
+		philo[i].meal_sem = table->meal_sem;
+		philo[i].write_sem = table->write_sem;
 		i++;
 	}
 }

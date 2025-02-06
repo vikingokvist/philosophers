@@ -20,6 +20,8 @@
 # include <string.h>
 # include <sys/time.h>
 # include <semaphore.h>
+# include <fcntl.h>
+# include <sys/stat.h>
 
 # define PHILOS_MAX 200
 
@@ -31,6 +33,7 @@
 # define ERR_THREAD_JOIN "Failed joining threads.\n"
 # define ERR_MUTEX_INIT "Failed to initialize mutex\n"
 # define ERR_TIME "Error getting time\n"
+# define ERR_SEM "Error opening semaphores\n"
 
 # define MSG_SLEEP "is sleeping\n"
 # define MSG_THINK "is thinking\n"
@@ -41,10 +44,14 @@
 typedef struct s_table
 {
 	pthread_t		table_thread;
-	sem_t			semaphore;
 	size_t			philosophers_count;
 	int				someone_died;
 	int				simulation_continues;
+	sem_t			*semaphores;
+	sem_t			*write_sem;
+	sem_t			*dead_sem;
+	sem_t			*meal_sem;
+	sem_t			*sim_sem;
 }	t_table;
 
 typedef struct s_philo
@@ -60,12 +67,16 @@ typedef struct s_philo
 	size_t				last_meal;
 	pthread_t			thread;
 	t_table				*table;
+	sem_t			*write_sem;
+	sem_t			*dead_sem;
+	sem_t			*meal_sem;
+	sem_t			*sim_sem;
 }	t_philo;
 
 //-----------------------------------------------INIT
 int		main(int argc, char **argv);
+int	init_semaphores(t_table *table, sem_t *semaphores, char **argv);
 void	init_philos(t_table *table, t_philo *philos, char **argv);
-void	set_forks(t_philo *philo, t_table *table, int i);
 //-----------------------------------------------THREADS
 int		create_threads(t_philo *philos);
 void	join_and_destroy_threads(t_philo *philo);

@@ -17,15 +17,10 @@ int	create_threads(t_philo *philo)
 	size_t	i;
 
 	i = 0;
-	sem_init(&philo->table->semaphore, 0, 1);
 	while (i < philo->table->philosophers_count)
 	{
 		if (pthread_create(&philo[i].thread, NULL,
 				&philo_routine, (void *)&philo[i]) != 0)
-		{
-			printf(ERR_THREAD_CREATE);
-			return (1);
-		}
 		i++;
 	}
 	if (pthread_create(&philo->table->table_thread, NULL,
@@ -49,8 +44,15 @@ void	join_and_destroy_threads(t_philo *philo)
 		i++;
 	}
 	if (pthread_join(philo->table->table_thread, NULL) != 0)
-	{
 		printf(ERR_THREAD_JOIN);
-	}
-	sem_destroy(&philo->table->semaphore);
+	sem_close(philo->table->semaphores);
+	sem_close(philo->table->sim_sem);
+	sem_close(philo->table->write_sem);
+	sem_close(philo->table->dead_sem);
+	sem_close(philo->table->meal_sem);
+	sem_unlink("/semaphores");
+	sem_unlink("/sim_sem");
+	sem_unlink("/write_sem");
+	sem_unlink("/dead_sem");
+	sem_unlink("/meal_sem");
 }
