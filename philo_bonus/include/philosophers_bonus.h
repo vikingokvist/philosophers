@@ -33,7 +33,10 @@
 # define ERR_THREAD_JOIN "Failed joining threads.\n"
 # define ERR_MUTEX_INIT "Failed to initialize mutex\n"
 # define ERR_TIME "Error getting time\n"
-# define ERR_SEM "Error opening semaphores\n"
+# define ERR_SEM_OPEN "Error opening semaphores\n"
+# define ERR_SEM_CLOSE "Error closing semaphore\n"
+# define ERR_SEM_UNLINK "Error unlinking semaphore\n"
+# define ERR_FORKS "Error creating fork()\n"
 
 # define MSG_SLEEP "is sleeping\n"
 # define MSG_THINK "is thinking\n"
@@ -77,17 +80,17 @@ typedef struct s_philo
 int		main(int argc, char **argv);
 void	init_philos(t_table *table, t_philo *philos, char **argv);
 int	init_table(t_table *table, sem_t *semaphores, char **argv);
-//-----------------------------------------------THREADS
-int		create_threads(t_philo *philos);
+//-----------------------------------------------SEMAPHORES
+int	open_semaphores(t_table *table);
+int	unlink_semaphores(void);
 void	free_semaphores(t_philo *philo);
-void	unlink_semaphores(void);
-//-----------------------------------------------PHILO ROUTINE
-void	*philo_routine(void *param);
+//-----------------------------------------------PHILO PROCESSES
+int	philo_routine(t_philo *philo);
 void	eat_and_sleep(t_philo *philo);
 void	precise_think(t_philo *philo);
 void	status_msg(t_philo *philo, size_t *id, char *string);
 void	*one_philosopher(t_philo *philo);
-//-----------------------------------------------TABLE ROUTINE
+//-----------------------------------------------TABLE THREAD
 void	*table_routine(void *param);
 int		dead_or_finished_eating(t_philo *philo);
 int		anyone_died(t_philo *philo);

@@ -24,7 +24,8 @@ int	main(int argc, char **argv)
 		return (1);
 	if (init_table(&table, semaphores, argv))
 		return (free_semaphores(philos), 1);
-	init_philos(&table, philos, argv);
+	if (start_simulation(philos))
+		return (free_semaphores(philos), printf(ERR_FORKS), 1);
 	if (create_threads(philos))
 		return (1);
 	return (0);

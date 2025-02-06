@@ -12,11 +12,10 @@
 
 #include "../include/philosophers_bonus.h"
 
-void	*philo_routine(void *param)
+int	philo_routine(t_philo *philo)
 {
-	t_philo	*philo;
-
-	philo = (t_philo *)param;
+	if (pthread_create(&philo->table->table_thread, NULL, &table_routine, (void *)philo) != 0)
+		return (printf(ERR_THREAD_CREATE), 1);
 	if (philo->table->philosophers_count == 1)
 		return (one_philosopher(philo));
 	if (philo->id % 2 != 0)
@@ -26,7 +25,7 @@ void	*philo_routine(void *param)
 		eat_and_sleep(philo);
 		precise_think(philo);
 	}
-	return (NULL);
+	return (0);
 }
 
 void	eat_and_sleep(t_philo *philo)

@@ -12,24 +12,29 @@
 
 #include "../include/philosophers_bonus.h"
 
-int	create_threads(t_philo *philo)
+int	start_simulation(t_philo *philo)
 {
+	pid_t	pids[philo->table->philosophers_count];
 	size_t	i;
 
 	i = 0;
 	while (i < philo->table->philosophers_count)
 	{
-		if (pthread_create(&philo[i].thread, NULL,
-				&philo_routine, (void *)&philo[i]) != 0)
+		pids[i] = fork();
+		if (pids[i] < 0)
+			return (1);
+		if (pids[i] == 0)
+		{
+			philo_routine(&philo[i]);
+			exit(EXIT_FAILURE);
+		}
 		i++;
 	}
-	if (pthread_create(&philo->table->table_thread, NULL,
-			&table_routine, (void *)philo) != 0)
+	i = 0;
+	while (i < philo->table->philosophers_count)
 	{
-		printf(ERR_THREAD_CREATE);
-		return (1);
+		waitpid(pids[i], NULL, 0);
+		i++;
 	}
 	return (0);
 }
-
-

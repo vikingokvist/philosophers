@@ -14,20 +14,51 @@
 
 void	free_semaphores(t_philo *philo)
 {
-	sem_close(philo->table->semaphores);
-	sem_close(philo->table->sim_sem);
-	sem_close(philo->table->write_sem);
-	sem_close(philo->table->dead_sem);
-	sem_close(philo->table->meal_sem);
-	unlink_semaphores();
+	if (sem_close(philo->table->semaphores) == -1)
+		printf(ERR_SEM_CLOSE);
+	if (sem_close(philo->table->sim_sem) == -1)
+		printf(ERR_SEM_CLOSE);
+	if (sem_close(philo->table->write_sem) == -1)
+		printf(ERR_SEM_CLOSE);
+	if (sem_close(philo->table->dead_sem) == -1)
+		printf(ERR_SEM_CLOSE);
+	if (sem_close(philo->table->meal_sem) == -1)
+		printf(ERR_SEM_CLOSE);
+	if (unlink_semaphores())
+		printf(ERR_SEM_UNLINK);
 }
 
-void	unlink_semaphores(void)
+int	unlink_semaphores(void)
 {
-	sem_unlink("/semaphores");
-	sem_unlink("/sim_sem");
-	sem_unlink("/write_sem");
-	sem_unlink("/dead_sem");
-	sem_unlink("/meal_sem");
+	if (sem_unlink("/semaphores") == -1)
+		return (1);
+	if (sem_unlink("/sim_sem") == -1)
+		return (1);
+	if (sem_unlink("/write_sem") == -1)
+		return (1);
+	if (sem_unlink("/dead_sem") == -1)
+		return (1);
+	if (sem_unlink("/meal_sem") == -1)
+		return (1);
+	return (0);
 }
 
+int	open_semaphores(t_table *table)
+{
+	table->semaphores = sem_open("/semaphores", O_CREAT, 0644, table->philosophers_count);
+	if (table->semaphores == SEM_FAILED)
+		return (1);
+	table->meal_sem = sem_open("/meal_sem", O_CREAT, 0644, 1);
+	if (table->meal_sem == SEM_FAILED)
+		return (1);
+	table->dead_sem = sem_open("/dead_sem", O_CREAT, 0644, 1);
+	if (table->dead_sem == SEM_FAILED)
+		return (1);
+	table->sim_sem = sem_open("/sim_sem", O_CREAT, 0644, 1);
+	if (table->sim_sem == SEM_FAILED)
+		return (1);
+	table->write_sem = sem_open("/write_sem", O_CREAT, 0644, 1);
+	if (table->write_sem == SEM_FAILED)
+		return (1);
+	return (0);
+}

@@ -17,22 +17,10 @@ int	init_table(t_table *table, sem_t *semaphores, char **argv)
 	table->philosophers_count = ft_atol(argv[1]);
 	table->simulation_continues = 1;
 	table->semaphores = semaphores;
-	unlink_semaphores();
-	table->semaphores = sem_open("/semaphores", O_CREAT, 0644, table->philosophers_count);
-	if (table->semaphores == SEM_FAILED)
-		return (printf(ERR_SEM), 1);
-	table->meal_sem = sem_open("/meal_sem", O_CREAT, 0644, 1);
-	if (table->meal_sem == SEM_FAILED)
-		return (printf(ERR_SEM), 1);
-	table->dead_sem = sem_open("/dead_sem", O_CREAT, 0644, 1);
-	if (table->dead_sem == SEM_FAILED)
-		return (printf(ERR_SEM), 1);
-	table->sim_sem = sem_open("/sim_sem", O_CREAT, 0644, 1);
-	if (table->sim_sem == SEM_FAILED)
-		return (printf(ERR_SEM), 1);
-	table->write_sem = sem_open("/write_sem", O_CREAT, 0644, 1);
-	if (table->write_sem == SEM_FAILED)
-		return (printf(ERR_SEM), 1);
+	if (unlink_semaphores())
+		return (printf(ERR_SEM_UNLINK), 1);
+	if (open_semaphores(table))
+		return (printf(ERR_SEM_OPEN), 1);
 	return (0);
 }
 
