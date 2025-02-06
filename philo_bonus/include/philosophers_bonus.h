@@ -17,11 +17,11 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <pthread.h>
-# include <string.h>
-# include <sys/time.h>
 # include <semaphore.h>
 # include <fcntl.h>
 # include <sys/stat.h>
+# include <sys/time.h>
+# include <sys/wait.h>
 
 # define PHILOS_MAX 200
 
@@ -50,7 +50,7 @@ typedef struct s_table
 	size_t			philosophers_count;
 	int				someone_died;
 	int				simulation_continues;
-	sem_t			*semaphores;
+	sem_t			*forks;
 	sem_t			*write_sem;
 	sem_t			*dead_sem;
 	sem_t			*meal_sem;
@@ -85,11 +85,12 @@ int	open_semaphores(t_table *table);
 int	unlink_semaphores(void);
 void	free_semaphores(t_philo *philo);
 //-----------------------------------------------PHILO PROCESSES
+int	start_simulation(t_philo *philo);
 int	philo_routine(t_philo *philo);
 void	eat_and_sleep(t_philo *philo);
 void	precise_think(t_philo *philo);
 void	status_msg(t_philo *philo, size_t *id, char *string);
-void	*one_philosopher(t_philo *philo);
+int	one_philosopher(t_philo *philo);
 //-----------------------------------------------TABLE THREAD
 void	*table_routine(void *param);
 int		dead_or_finished_eating(t_philo *philo);

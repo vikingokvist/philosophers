@@ -16,6 +16,7 @@ int	philo_routine(t_philo *philo)
 {
 	if (pthread_create(&philo->table->table_thread, NULL, &table_routine, (void *)philo) != 0)
 		return (printf(ERR_THREAD_CREATE), 1);
+	pthread_detach(philo->table->table_thread);
 	if (philo->table->philosophers_count == 1)
 		return (one_philosopher(philo));
 	if (philo->id % 2 != 0)
@@ -30,22 +31,29 @@ int	philo_routine(t_philo *philo)
 
 void	eat_and_sleep(t_philo *philo)
 {
+	sem_wait(philo->table->forks);
 	status_msg(philo, &philo->id, MSG_FORK);
+	sem_wait(philo->table->forks);
 	status_msg(philo, &philo->id, MSG_FORK);
+	sem_wait(philo->meal_sem);
 	status_msg(philo, &philo->id, MSG_EAT);
 	philo->last_meal = get_time();
+	sem_post(philo->meal_sem);
 	ft_usleep(philo, philo->time_to_eat);
 	if (simulation_continues(philo))
 	{
+		sem_wait(philo->meal_sem);
 		philo->meals_had += 1;
+		sem_post(philo->meal_sem);
 	}
 	status_msg(philo, &philo->id, MSG_SLEEP);
 	ft_usleep(philo, philo->time_to_sleep);
+	sem_post(philo->table->forks);
+	sem_post(philo->table->forks);
 }
 
 void	precise_think(t_philo *philo)
 {
-	ft_usleep(philo, 1);
 	status_msg(philo, &philo->id, MSG_THINK);
 }
 
@@ -55,14 +63,18 @@ void	status_msg(t_philo *philo, size_t *id, char *string)
 
 	if (!simulation_continues(philo))
 		return ;
+	sem_wait(philo->write_sem);
 	time = get_time() - philo->start_time;
 	printf("%zu %zu %s", time, *id, string);
+	sem_post(philo->write_sem);
 }
 
-void	*one_philosopher(t_philo *philo)
+int	one_philosopher(t_philo *philo)
 {
+	sem_wait(philo->table->forks);
 	status_msg(philo, &philo->id, MSG_FORK);
 	ft_usleep(philo, philo->time_to_die);
 	status_msg(philo, &philo->id, MSG_DEATH);
-	return (NULL);
+	sem_post(philo->table->forks);
+	return (0);
 }

@@ -25,6 +25,7 @@ int	start_simulation(t_philo *philo)
 			return (1);
 		if (pids[i] == 0)
 		{
+			
 			philo_routine(&philo[i]);
 			exit(EXIT_FAILURE);
 		}

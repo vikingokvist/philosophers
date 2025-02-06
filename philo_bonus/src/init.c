@@ -12,15 +12,16 @@
 
 #include "../include/philosophers_bonus.h"
 
-int	init_table(t_table *table, sem_t *semaphores, char **argv)
+int	init_table(t_table *table, sem_t *forks, char **argv)
 {
 	table->philosophers_count = ft_atol(argv[1]);
 	table->simulation_continues = 1;
-	table->semaphores = semaphores;
+	table->forks = forks;
 	if (unlink_semaphores())
 		return (printf(ERR_SEM_UNLINK), 1);
 	if (open_semaphores(table))
 		return (printf(ERR_SEM_OPEN), 1);
+	printf("HERE\n");
 	return (0);
 }
 

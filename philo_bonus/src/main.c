@@ -16,17 +16,16 @@ int	main(int argc, char **argv)
 {
 	t_table			table;
 	t_philo			philos[PHILOS_MAX];
-	sem_t			semaphores[PHILOS_MAX];
+	sem_t			forks[PHILOS_MAX];
 
 	if (!(argc >= 5 && argc <= 6))
 		return (printf(ERR_ARGS, ERR_ARGS2), 1);
 	if (check_valid_values(argv))
 		return (1);
-	if (init_table(&table, semaphores, argv))
+	if (init_table(&table, forks, argv))
 		return (free_semaphores(philos), 1);
 	if (start_simulation(philos))
 		return (free_semaphores(philos), printf(ERR_FORKS), 1);
-	if (create_threads(philos))
-		return (1);
+	free_semaphores(philos);
 	return (0);
 }
