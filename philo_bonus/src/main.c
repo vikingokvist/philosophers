@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include_b/philosophers_bonus.h"
+#include "../include/philosophers_bonus.h"
 
 int	main(int argc, char **argv)
 {
@@ -22,11 +22,10 @@ int	main(int argc, char **argv)
 		return (printf(ERR_ARGS, ERR_ARGS2), 1);
 	if (check_valid_values(argv))
 		return (1);
-	if (init_semaphores(&table, &semaphores, argv))
-		return (join_and_destroy_threads(philos), 1);
-	init_philos(&table, philos,  argv);
+	if (init_table(&table, semaphores, argv))
+		return (free_semaphores(philos), 1);
+	init_philos(&table, philos, argv);
 	if (create_threads(philos))
 		return (1);
-	join_and_destroy_threads(philos);
 	return (0);
 }

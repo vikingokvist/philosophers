@@ -75,11 +75,12 @@ typedef struct s_philo
 
 //-----------------------------------------------INIT
 int		main(int argc, char **argv);
-int	init_semaphores(t_table *table, sem_t *semaphores, char **argv);
 void	init_philos(t_table *table, t_philo *philos, char **argv);
+int	init_table(t_table *table, sem_t *semaphores, char **argv);
 //-----------------------------------------------THREADS
 int		create_threads(t_philo *philos);
-void	join_and_destroy_threads(t_philo *philo);
+void	free_semaphores(t_philo *philo);
+void	unlink_semaphores(void);
 //-----------------------------------------------PHILO ROUTINE
 void	*philo_routine(void *param);
 void	eat_and_sleep(t_philo *philo);

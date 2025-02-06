@@ -10,13 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include_b/philosophers_bonus.h"
+#include "../include/philosophers_bonus.h"
 
-int	init_semaphores(t_table *table, sem_t *semaphores, char **argv)
+int	init_table(t_table *table, sem_t *semaphores, char **argv)
 {
 	table->philosophers_count = ft_atol(argv[1]);
 	table->simulation_continues = 1;
 	table->semaphores = semaphores;
+	unlink_semaphores();
 	table->semaphores = sem_open("/semaphores", O_CREAT, 0644, table->philosophers_count);
 	if (table->semaphores == SEM_FAILED)
 		return (printf(ERR_SEM), 1);
@@ -32,7 +33,7 @@ int	init_semaphores(t_table *table, sem_t *semaphores, char **argv)
 	table->write_sem = sem_open("/write_sem", O_CREAT, 0644, 1);
 	if (table->write_sem == SEM_FAILED)
 		return (printf(ERR_SEM), 1);
-
+	return (0);
 }
 
 void	init_philos(t_table *table, t_philo *philo, char **argv)

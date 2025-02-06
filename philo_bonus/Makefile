@@ -3,7 +3,7 @@ NAME = philo_bonus
 #CFLAGS----------------------------------------------------------------------------------
 
 CC 	= cc
-CFLAGS 	= -Wall -Wextra -Werror -I ./include_b
+CFLAGS 	= -Wall -Wextra -Werror -I ./include
 RM	= rm -rf
 NOPRINT = --no-print-directory
 
@@ -15,8 +15,8 @@ RESET := \033[0m
 
 #FILES------------------------------------------------------------------------------------
 
-SRCS = ./src_b/main_bonus.c ./src_b/init_bonus.c ./src_b/threads_bonus.c ./src_b/utils_bonus.c \
-	./src_b/philo_routine_bonus.c ./src_b/table_routine_bonus.c
+SRCS = ./src/main.c ./src/init.c ./src/threads.c ./src/utils.c \
+	./src/philo_routine.c ./src/table_routine.c ./src/semaphores.c
 
 	
 #OBJS--------------------------------------------------------------------------------------

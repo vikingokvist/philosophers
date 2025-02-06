@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include_b/philosophers_bonus.h"
+#include "../include/philosophers_bonus.h"
 
 void	ft_usleep(t_philo *philo, size_t time_to_usleep)
 {

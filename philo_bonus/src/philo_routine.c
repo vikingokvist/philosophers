@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include_b/philosophers_bonus.h"
+#include "../include/philosophers_bonus.h"
 
 void	*philo_routine(void *param)
 {
