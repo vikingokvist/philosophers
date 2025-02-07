@@ -19,39 +19,21 @@ void	*table_routine(void *param)
 	philo = (t_philo *)param;
 	while (1)
 	{
-		if (dead_or_finished_eating(philo))
-			return (NULL);
-	}
-	return (NULL);
-}
-
-int	dead_or_finished_eating(t_philo *philo)
-{
-	size_t	i;
-	int		all_ate;
-
-	i = 0;
-	all_ate = 1;
-	while (i < philo->table->philosophers_count)
-	{
 		sem_wait(philo->dead_sem);
-		if (anyone_died(&philo[i]))
+		if (anyone_died(philo))
 		{
 			sem_post(philo->dead_sem);
-			return (1);
+			return (NULL);
 		}
-		if (philo[i].meals_to_have > 0 && philo[i].meals_had
-			< philo[i].meals_to_have)
-			all_ate = 0;
+		if (philo->meals_to_have > 0 && philo->meals_had >= philo->meals_to_have)
+		{
+			stop_simulation(philo);
+			sem_post(philo->dead_sem);
+			return (NULL);
+		}
 		sem_post(philo->dead_sem);
-		i++;
 	}
-	if (philo[0].meals_to_have > 0 && all_ate == 1)
-	{
-		stop_simulation(philo);
-		return (1);
-	}
-	return (0);
+	return (NULL);
 }
 
 int	anyone_died(t_philo *philo)

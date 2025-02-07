@@ -31,16 +31,16 @@ all: $(NAME)
 	@$(CC) $(CFLAGS) -o $@ -c $<
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -lreadline 
-	@echo "[100%] $(GREEN)(Minishell) Compilation  | Minishell | successful!$(RESET)"
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -lpthread -lrt
+	@echo "[100%] $(GREEN)(Philosophers) Compilation successful!$(RESET)"
 
 clean:
 	$(RM) $(OBJS)
-	@echo "[100%] $(RED)(Minishell) Cleaning up exept compilers ..$(RESET)"
+	@echo "[100%] $(RED)(Philosophers) Cleaning up objects...$(RESET)"
 
 fclean:
 	$(RM) $(OBJS) $(NAME)
-	@echo "[100%] $(RED)(Minishell) Cleaning up...$(RESET)"
+	@echo "[100%] $(RED)(Philosophers) Cleaning up executable...$(RESET)"
 
 re: fclean all bonus
 

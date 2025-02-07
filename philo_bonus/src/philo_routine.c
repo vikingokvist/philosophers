@@ -16,7 +16,6 @@ int	philo_routine(t_philo *philo)
 {
 	if (pthread_create(&philo->table->table_thread, NULL, &table_routine, (void *)philo) != 0)
 		return (printf(ERR_THREAD_CREATE), 1);
-	pthread_detach(philo->table->table_thread);
 	if (philo->table->philosophers_count == 1)
 		return (one_philosopher(philo));
 	if (philo->id % 2 != 0)
@@ -24,8 +23,9 @@ int	philo_routine(t_philo *philo)
 	while (simulation_continues(philo))
 	{
 		eat_and_sleep(philo);
-		precise_think(philo);
+		status_msg(philo, &philo->id, MSG_THINK);
 	}
+	pthread_detach(philo->table->table_thread);
 	return (0);
 }
 
@@ -50,11 +50,6 @@ void	eat_and_sleep(t_philo *philo)
 	ft_usleep(philo, philo->time_to_sleep);
 	sem_post(philo->table->forks);
 	sem_post(philo->table->forks);
-}
-
-void	precise_think(t_philo *philo)
-{
-	status_msg(philo, &philo->id, MSG_THINK);
 }
 
 void	status_msg(t_philo *philo, size_t *id, char *string)

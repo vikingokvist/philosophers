@@ -22,6 +22,7 @@
 # include <sys/stat.h>
 # include <sys/time.h>
 # include <sys/wait.h>
+# include <signal.h>
 
 # define PHILOS_MAX 200
 
@@ -79,7 +80,7 @@ typedef struct s_philo
 //-----------------------------------------------INIT
 int		main(int argc, char **argv);
 void	init_philos(t_table *table, t_philo *philos, char **argv);
-int	init_table(t_table *table, sem_t *semaphores, char **argv);
+int	init_table(t_table *table, char **argv);
 //-----------------------------------------------SEMAPHORES
 int	open_semaphores(t_table *table);
 int	unlink_semaphores(void);
@@ -88,7 +89,6 @@ void	free_semaphores(t_philo *philo);
 int	start_simulation(t_philo *philo);
 int	philo_routine(t_philo *philo);
 void	eat_and_sleep(t_philo *philo);
-void	precise_think(t_philo *philo);
 void	status_msg(t_philo *philo, size_t *id, char *string);
 int	one_philosopher(t_philo *philo);
 //-----------------------------------------------TABLE THREAD
