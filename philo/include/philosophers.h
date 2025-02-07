@@ -51,6 +51,8 @@ typedef struct s_table
 	pthread_mutex_t	sim_lock;
 	pthread_mutex_t	sleep_lock;
 	pthread_mutex_t	dead_lock;
+	size_t			start_time;
+	size_t			times_ate;
 }	t_table;
 
 typedef struct s_philo
@@ -85,16 +87,13 @@ int		create_threads(t_philo *philos);
 void	join_and_destroy_threads(t_philo *philo);
 //-----------------------------------------------PHILO ROUTINE
 void	*philo_routine(void *param);
-void	eat_and_sleep(t_philo *philo);
-void	precise_think(t_philo *philo);
+void	eat_and_sleep_think(t_philo *philo);
 void	status_msg(t_philo *philo, size_t *id, char *string);
-void	*one_philosopher(t_philo *philo);
 //-----------------------------------------------TABLE ROUTINE
-void	*table_routine(void *param);
-int		dead_or_finished_eating(t_philo *philo);
 int		anyone_died(t_philo *philo);
 int		simulation_continues(t_philo *philo);
 void	stop_simulation(t_philo *philo);
+void	*one_philosopher(t_philo *philo);
 //-----------------------------------------------UTILS
 int		check_valid_values(char **argv);
 int		ft_isdigit(int c);

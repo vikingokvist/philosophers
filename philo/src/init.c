@@ -16,10 +16,10 @@ int	init_table(t_table *table, pthread_mutex_t *forks, char **argv)
 {
 	size_t	i;
 
-	
 	table->philosophers_count = ft_atol(argv[1]);
 	table->forks = forks;
 	table->simulation_continues = 1;
+	table->times_ate = 0;
 	i = 0;
 	while (i < table->philosophers_count)
 	{
@@ -43,10 +43,8 @@ int	init_table(t_table *table, pthread_mutex_t *forks, char **argv)
 void	init_philos(t_table *table, t_philo *philo, char **argv)
 {
 	size_t		i;
-	size_t		start_time;
 
 	i = 0;
-	start_time = get_time();
 	while (i < table->philosophers_count)
 	{
 		philo[i].id = i;
@@ -57,8 +55,6 @@ void	init_philos(t_table *table, t_philo *philo, char **argv)
 		if (argv[5])
 			philo[i].meals_to_have = ft_atol(argv[5]);
 		philo[i].meals_had = 0;
-		philo[i].start_time = start_time;
-		philo[i].last_meal = start_time;
 		philo[i].table = table;
 		set_forks(philo, table, i);
 		philo[i].write_lock = &table->write_lock;

@@ -17,19 +17,27 @@ void	*philo_routine(void *param)
 	t_philo	*philo;
 
 	philo = (t_philo *)param;
+	pthread_mutex_lock(philo->dead_lock);
+	pthread_mutex_unlock(philo->dead_lock);
+	philo->start_time = philo->table->start_time;
+	philo->last_meal = philo->table->start_time;
 	if (philo->table->philosophers_count == 1)
 		return (one_philosopher(philo));
 	if (philo->id % 2 != 0)
-		ft_usleep(philo, 1);
+		ft_usleep(philo, 100);
 	while (simulation_continues(philo))
 	{
-		eat_and_sleep(philo);
-		precise_think(philo);
+		if (anyone_died(philo))
+			return (NULL);
+		eat_and_sleep_think(philo);
+		if (philo->meals_to_have > 0
+			&& philo->meals_had >= philo->meals_to_have)
+			return (NULL);
 	}
 	return (NULL);
 }
 
-void	eat_and_sleep(t_philo *philo)
+void	eat_and_sleep_think(t_philo *philo)
 {
 	pthread_mutex_lock(philo->l_fork);
 	status_msg(philo, &philo->id, MSG_FORK);
@@ -50,14 +58,7 @@ void	eat_and_sleep(t_philo *philo)
 	pthread_mutex_unlock(philo->l_fork);
 	pthread_mutex_unlock(philo->r_fork);
 	ft_usleep(philo, philo->time_to_sleep);
-}
-
-void	precise_think(t_philo *philo)
-{
-	pthread_mutex_lock(philo->sleep_lock);
-	ft_usleep(philo, 1);
 	status_msg(philo, &philo->id, MSG_THINK);
-	pthread_mutex_unlock(philo->sleep_lock);
 }
 
 void	status_msg(t_philo *philo, size_t *id, char *string)
@@ -68,16 +69,6 @@ void	status_msg(t_philo *philo, size_t *id, char *string)
 		return ;
 	pthread_mutex_lock(philo->write_lock);
 	time = get_time() - philo->start_time;
-	printf("%zu %zu %s", time , *id, string);
+	printf("%zu %zu %s", time, *id, string);
 	pthread_mutex_unlock(philo->write_lock);
-}
-
-void	*one_philosopher(t_philo *philo)
-{
-	pthread_mutex_lock(philo->l_fork);
-	status_msg(philo, &philo->id, MSG_FORK);
-	ft_usleep(philo, philo->time_to_die);
-	status_msg(philo, &philo->id, MSG_DEATH);
-	pthread_mutex_unlock(philo->l_fork);
-	return (NULL);
 }
