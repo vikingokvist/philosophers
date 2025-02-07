@@ -17,6 +17,8 @@ void	*table_routine(void *param)
 	t_philo	*philo;
 
 	philo = (t_philo *)param;
+	if (philo->id % 2 != 0)
+		ft_usleep(philo, 500);
 	while (1)
 	{
 		sem_wait(philo->dead_sem);
@@ -27,6 +29,7 @@ void	*table_routine(void *param)
 		}
 		if (philo->meals_to_have > 0 && philo->meals_had >= philo->meals_to_have)
 		{
+			
 			stop_simulation(philo);
 			sem_post(philo->dead_sem);
 			return (NULL);

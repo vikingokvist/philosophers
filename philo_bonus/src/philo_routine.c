@@ -23,7 +23,6 @@ int	philo_routine(t_philo *philo)
 	while (simulation_continues(philo))
 	{
 		eat_and_sleep(philo);
-		status_msg(philo, &philo->id, MSG_THINK);
 	}
 	pthread_detach(philo->table->table_thread);
 	return (0);
@@ -47,9 +46,10 @@ void	eat_and_sleep(t_philo *philo)
 		sem_post(philo->meal_sem);
 	}
 	status_msg(philo, &philo->id, MSG_SLEEP);
+	sem_post(philo->table->forks);
+	sem_post(philo->table->forks);
 	ft_usleep(philo, philo->time_to_sleep);
-	sem_post(philo->table->forks);
-	sem_post(philo->table->forks);
+	status_msg(philo, &philo->id, MSG_THINK);
 }
 
 void	status_msg(t_philo *philo, size_t *id, char *string)
