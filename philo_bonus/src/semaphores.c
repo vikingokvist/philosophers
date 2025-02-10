@@ -12,6 +12,26 @@
 
 #include "../include/philosophers_bonus.h"
 
+int	open_semaphores(t_table *table)
+{
+	table->forks = sem_open(SEM_FORKS, O_CREAT, 0644, table->philosophers_count);
+	if (table->forks == SEM_FAILED)
+		return (1);
+	table->meal_sem = sem_open(SEM_MEAL, O_CREAT, 0644, 1);
+	if (table->meal_sem == SEM_FAILED)
+		return (1);
+	table->dead_sem = sem_open(SEM_DEAD, O_CREAT, 0644, 1);
+	if (table->dead_sem == SEM_FAILED)
+		return (1);
+	table->sim_sem = sem_open(SEM_SIM, O_CREAT, 0644, 1);
+	if (table->sim_sem == SEM_FAILED)
+		return (1);
+	table->write_sem = sem_open(SEM_WRITE, O_CREAT, 0644, 1);
+	if (table->write_sem == SEM_FAILED)
+		return (1);
+	return (0);
+}
+
 void	free_semaphores(t_philo *philo)
 {
 	if (sem_close(philo->table->forks) == -1)
@@ -24,41 +44,14 @@ void	free_semaphores(t_philo *philo)
 		printf(ERR_SEM_CLOSE);
 	if (sem_close(philo->table->meal_sem) == -1)
 		printf(ERR_SEM_CLOSE);
-	if (unlink_semaphores())
-		printf(ERR_SEM_UNLINK);
+	unlink_semaphores();
 }
 
-int	unlink_semaphores(void)
+void	unlink_semaphores(void)
 {
-	if (sem_unlink("/forks") == -1)
-		return (1);
-	if (sem_unlink("/sim_sem") == -1)
-		return (1);
-	if (sem_unlink("/write_sem") == -1)
-		return (1);
-	if (sem_unlink("/dead_sem") == -1)
-		return (1);
-	if (sem_unlink("/meal_sem") == -1)
-		return (1);
-	return (0);
-}
-
-int	open_semaphores(t_table *table)
-{
-	table->forks = sem_open("/forks", O_CREAT, 0644, table->philosophers_count);
-	if (table->forks == SEM_FAILED)
-		return (1);
-	table->meal_sem = sem_open("/meal_sem", O_CREAT, 0644, 1);
-	if (table->meal_sem == SEM_FAILED)
-		return (1);
-	table->dead_sem = sem_open("/dead_sem", O_CREAT, 0644, 1);
-	if (table->dead_sem == SEM_FAILED)
-		return (1);
-	table->sim_sem = sem_open("/sim_sem", O_CREAT, 0644, 1);
-	if (table->sim_sem == SEM_FAILED)
-		return (1);
-	table->write_sem = sem_open("/write_sem", O_CREAT, 0644, 1);
-	if (table->write_sem == SEM_FAILED)
-		return (1);
-	return (0);
+	sem_unlink(SEM_FORKS);
+	sem_unlink(SEM_SIM);
+	sem_unlink(SEM_WRITE);
+	sem_unlink(SEM_WRITE);
+	sem_unlink(SEM_MEAL);
 }

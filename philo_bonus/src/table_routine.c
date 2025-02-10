@@ -17,47 +17,20 @@ void	*table_routine(void *param)
 	t_philo	*philo;
 
 	philo = (t_philo *)param;
-	if (philo->id % 2 != 0)
-		ft_usleep(philo, 500);
+	sem_wait(philo->sim_sem);
+	sem_post(philo->sim_sem);
 	while (1)
 	{
-		sem_wait(philo->dead_sem);
-		if (anyone_died(philo))
+		if ((get_time() - philo->last_meal) > philo->time_to_die)
 		{
-			sem_post(philo->dead_sem);
+			status_msg(philo, &philo->id, MSG_DEATH);
+			philo->table->simulation_continues = 0;
+			exit(EXIT_FAILURE);
 			return (NULL);
 		}
-		if (philo->meals_to_have > 0 && philo->meals_had >= philo->meals_to_have)
-		{
-			
-			stop_simulation(philo);
-			sem_post(philo->dead_sem);
-			return (NULL);
-		}
-		sem_post(philo->dead_sem);
+		usleep(1000);
 	}
 	return (NULL);
-}
-
-int	anyone_died(t_philo *philo)
-{
-	sem_wait(philo->dead_sem);
-	if ((get_time() - philo->last_meal) > philo->time_to_die)
-	{
-		status_msg(philo, &philo->id, MSG_DEATH);
-		stop_simulation(philo);
-		sem_post(philo->dead_sem);
-		return (1);
-	}
-	sem_post(philo->dead_sem);
-	return (0);
-}
-
-void	stop_simulation(t_philo *philo)
-{
-	sem_wait(philo->sim_sem);
-	philo->table->simulation_continues = 0;
-	sem_post(philo->sim_sem);
 }
 
 int	simulation_continues(t_philo *philo)

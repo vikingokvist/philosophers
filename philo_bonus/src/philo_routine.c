@@ -16,15 +16,15 @@ int	philo_routine(t_philo *philo)
 {
 	if (pthread_create(&philo->table->table_thread, NULL, &table_routine, (void *)philo) != 0)
 		return (printf(ERR_THREAD_CREATE), 1);
+	pthread_detach(philo->table->table_thread);
 	if (philo->table->philosophers_count == 1)
 		return (one_philosopher(philo));
 	if (philo->id % 2 != 0)
-		ft_usleep(philo, 1);
+		ft_usleep(philo, 100);
 	while (simulation_continues(philo))
 	{
 		eat_and_sleep(philo);
 	}
-	pthread_detach(philo->table->table_thread);
 	return (0);
 }
 

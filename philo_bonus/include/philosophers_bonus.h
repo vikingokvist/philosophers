@@ -45,6 +45,13 @@
 # define MSG_FORK "has taken a fork\n"
 # define MSG_DEATH "died\n"
 
+# define SEM_FORKS "/forks"
+# define SEM_SIM "/sim_sem"
+# define SEM_WRITE "/write_sem"
+# define SEM_DEAD "/dead_sem"
+# define SEM_MEAL "/meal_sem"
+
+
 typedef struct s_table
 {
 	pthread_t		table_thread;
@@ -83,7 +90,7 @@ void	init_philos(t_table *table, t_philo *philos, char **argv);
 int	init_table(t_table *table, char **argv);
 //-----------------------------------------------SEMAPHORES
 int	open_semaphores(t_table *table);
-int	unlink_semaphores(void);
+void	unlink_semaphores(void);
 void	free_semaphores(t_philo *philo);
 //-----------------------------------------------PHILO PROCESSES
 int	start_simulation(t_philo *philo);
