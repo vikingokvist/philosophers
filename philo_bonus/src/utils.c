@@ -12,15 +12,13 @@
 
 #include "../include/philosophers_bonus.h"
 
-void	ft_usleep(t_philo *philo, size_t time_to_usleep)
+void	ft_usleep(size_t time_to_usleep)
 {
 	size_t	wake_up;
 
 	wake_up = get_time() + time_to_usleep;
 	while (get_time() < wake_up)
 	{
-		if (!simulation_continues(philo))
-			break ;
 		usleep(100);
 	}
 }

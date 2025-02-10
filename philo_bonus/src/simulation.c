@@ -14,7 +14,7 @@
 
 int	start_simulation(t_philo *philo)
 {
-	pid_t	pids[philo->table->philosophers_count];
+	pid_t	pids[PHILOS_MAX];
 	size_t	i;
 
 	i = 0;
@@ -26,10 +26,11 @@ int	start_simulation(t_philo *philo)
 		if (pids[i] == 0)
 		{
 			philo_routine(&philo[i]);
-			exit(EXIT_FAILURE);
+			exit(1);
 		}
 		i++;
 	}
+	kill_processes(philo, pids);
 	i = 0;
 	while (i < philo->table->philosophers_count)
 	{
@@ -37,4 +38,23 @@ int	start_simulation(t_philo *philo)
 		i++;
 	}
 	return (0);
+}
+
+void	kill_processes(t_philo *philo, pid_t *pids)
+{
+	pid_t	dead_pid;
+	size_t	i;
+
+	dead_pid = waitpid(-1, &philo->table->exit_status, 0);
+	if (WIFEXITED(philo->table->exit_status)
+		&& WEXITSTATUS(philo->table->exit_status) == 1)
+	{
+		i = 0;
+		while (i < philo->table->philosophers_count)
+		{
+			if (pids[i] != dead_pid)
+				kill(pids[i], SIGTERM);
+			i++;
+		}
+	}
 }

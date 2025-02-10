@@ -15,11 +15,8 @@
 int	init_table(t_table *table, char **argv)
 {
 	table->philosophers_count = ft_atol(argv[1]);
-	table->simulation_continues = 1;
 	unlink_semaphores();
-	if (open_semaphores(table))
-		return (printf(ERR_SEM_OPEN), 1);
-	return (0);
+	return (open_semaphores(table));
 }
 
 void	init_philos(t_table *table, t_philo *philo, char **argv)
@@ -28,7 +25,6 @@ void	init_philos(t_table *table, t_philo *philo, char **argv)
 	size_t		start_time;
 
 	i = 0;
-
 	start_time = get_time();
 	while (i < table->philosophers_count)
 	{

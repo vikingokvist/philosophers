@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosophers_bonus.h                                     :+:      :+:    :+:   */
+/*   philosophers_bonus.h                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ctommasi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,6 +12,7 @@
 
 #ifndef PHILOSOPHERS_BONUS_H
 # define PHILOSOPHERS_BONUS_H
+
 # include <limits.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -51,13 +52,11 @@
 # define SEM_DEAD "/dead_sem"
 # define SEM_MEAL "/meal_sem"
 
-
 typedef struct s_table
 {
 	pthread_t		table_thread;
 	size_t			philosophers_count;
-	int				someone_died;
-	int				simulation_continues;
+	int				exit_status;
 	sem_t			*forks;
 	sem_t			*write_sem;
 	sem_t			*dead_sem;
@@ -72,43 +71,38 @@ typedef struct s_philo
 	size_t				time_to_die;
 	size_t				time_to_sleep;
 	size_t				meals_to_have;
-	size_t				is_eating;
 	size_t				meals_had;
 	size_t				start_time;
 	size_t				last_meal;
-	pthread_t			thread;
 	t_table				*table;
-	sem_t			*write_sem;
-	sem_t			*dead_sem;
-	sem_t			*meal_sem;
-	sem_t			*sim_sem;
+	sem_t				*write_sem;
+	sem_t				*dead_sem;
+	sem_t				*meal_sem;
+	sem_t				*sim_sem;
 }	t_philo;
 
 //-----------------------------------------------INIT
 int		main(int argc, char **argv);
 void	init_philos(t_table *table, t_philo *philos, char **argv);
-int	init_table(t_table *table, char **argv);
+int		init_table(t_table *table, char **argv);
 //-----------------------------------------------SEMAPHORES
-int	open_semaphores(t_table *table);
+int		open_semaphores(t_table *table);
 void	unlink_semaphores(void);
 void	free_semaphores(t_philo *philo);
 //-----------------------------------------------PHILO PROCESSES
-int	start_simulation(t_philo *philo);
-int	philo_routine(t_philo *philo);
+int		start_simulation(t_philo *philo);
+void	kill_processes(t_philo *philo, pid_t *pids);
+int		philo_routine(t_philo *philo);
 void	eat_and_sleep(t_philo *philo);
 void	status_msg(t_philo *philo, size_t *id, char *string);
-int	one_philosopher(t_philo *philo);
+int		one_philosopher(t_philo *philo);
 //-----------------------------------------------TABLE THREAD
 void	*table_routine(void *param);
-int		dead_or_finished_eating(t_philo *philo);
-int		anyone_died(t_philo *philo);
-int		simulation_continues(t_philo *philo);
-void	stop_simulation(t_philo *philo);
 //-----------------------------------------------UTILS
 int		check_valid_values(char **argv);
 int		ft_isdigit(int c);
 size_t	get_time(void);
 long	ft_atol(const char *str);
-void	ft_usleep(t_philo *philo, size_t time_to_usleep);
+void	ft_usleep(size_t time_to_usleep);
 
 #endif
