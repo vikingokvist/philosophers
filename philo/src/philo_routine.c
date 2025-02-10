@@ -44,10 +44,10 @@ void	eat_and_sleep_think(t_philo *philo)
 	pthread_mutex_lock(philo->r_fork);
 	status_msg(philo, &philo->id, MSG_FORK);
 	status_msg(philo, &philo->id, MSG_EAT);
+	ft_usleep(philo, philo->time_to_eat);
 	pthread_mutex_lock(philo->meal_lock);
 	philo->last_meal = get_time();
 	pthread_mutex_unlock(philo->meal_lock);
-	ft_usleep(philo, philo->time_to_eat);
 	if (simulation_continues(philo))
 	{
 		pthread_mutex_lock(philo->meal_lock);

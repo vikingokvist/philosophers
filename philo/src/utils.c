@@ -19,7 +19,7 @@ void	ft_usleep(t_philo *philo, size_t time_to_usleep)
 	wake_up = get_time() + time_to_usleep;
 	while (get_time() < wake_up)
 	{
-		if (!simulation_continues(philo))
+		if (!simulation_continues(philo) || anyone_died(philo))
 			break ;
 		usleep(100);
 	}
@@ -31,7 +31,7 @@ size_t	get_time(void)
 
 	if (gettimeofday(&time, NULL) == -1)
 		return (printf(ERR_TIME), -1);
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
 int	check_valid_values(char **argv)
