@@ -49,7 +49,6 @@ typedef struct s_table
 	pthread_mutex_t	write_lock;
 	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	sim_lock;
-	pthread_mutex_t	sleep_lock;
 	pthread_mutex_t	dead_lock;
 	size_t			start_time;
 	size_t			times_ate;
@@ -73,7 +72,6 @@ typedef struct s_philo
 	pthread_mutex_t		*write_lock;
 	pthread_mutex_t		*meal_lock;
 	pthread_mutex_t		*sim_lock;
-	pthread_mutex_t		*sleep_lock;
 	pthread_mutex_t		*dead_lock;
 }	t_philo;
 

@@ -27,9 +27,9 @@ void	*philo_routine(void *param)
 		ft_usleep(philo, 100);
 	while (simulation_continues(philo))
 	{
+		eat_and_sleep_think(philo);
 		if (anyone_died(philo))
 			return (NULL);
-		eat_and_sleep_think(philo);
 		if (philo->meals_to_have > 0
 			&& philo->meals_had >= philo->meals_to_have)
 			return (NULL);

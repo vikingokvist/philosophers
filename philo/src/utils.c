@@ -74,6 +74,8 @@ long	ft_atol(const char *str)
 	int		minus;
 	int		i;
 
+	if (!str)
+		return (0);
 	i = 0;
 	res = 0;
 	minus = 1;

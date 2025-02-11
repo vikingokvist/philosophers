@@ -33,8 +33,6 @@ int	init_table(t_table *table, pthread_mutex_t *forks, char **argv)
 		return (1);
 	if (pthread_mutex_init(&table->sim_lock, NULL) != 0)
 		return (1);
-	if (pthread_mutex_init(&table->sleep_lock, NULL) != 0)
-		return (1);
 	if (pthread_mutex_init(&table->dead_lock, NULL) != 0)
 		return (1);
 	return (0);
@@ -44,25 +42,21 @@ void	init_philos(t_table *table, t_philo *philo, char **argv)
 {
 	size_t		i;
 
-	i = 0;
-	while (i < table->philosophers_count)
+	i = -1;
+	while (++i < table->philosophers_count)
 	{
 		philo[i].id = i;
 		philo[i].time_to_die = ft_atol(argv[2]);
 		philo[i].time_to_eat = ft_atol(argv[3]);
 		philo[i].time_to_sleep = ft_atol(argv[4]);
-		philo[i].meals_to_have = 0;
-		if (argv[5])
-			philo[i].meals_to_have = ft_atol(argv[5]);
+		philo[i].meals_to_have = ft_atol(argv[5]);
 		philo[i].meals_had = 0;
 		philo[i].table = table;
 		set_forks(philo, table, i);
 		philo[i].write_lock = &table->write_lock;
 		philo[i].meal_lock = &table->meal_lock;
 		philo[i].sim_lock = &table->sim_lock;
-		philo[i].sleep_lock = &table->sleep_lock;
 		philo[i].dead_lock = &table->dead_lock;
-		i++;
 	}
 }
 

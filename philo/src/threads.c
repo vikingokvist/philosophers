@@ -54,5 +54,4 @@ void	join_and_destroy_threads(t_philo *philo)
 	pthread_mutex_destroy(philo->meal_lock);
 	pthread_mutex_destroy(philo->sim_lock);
 	pthread_mutex_destroy(philo->dead_lock);
-	pthread_mutex_destroy(philo->sleep_lock);
 }

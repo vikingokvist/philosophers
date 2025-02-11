@@ -24,7 +24,7 @@ int	anyone_died(t_philo *philo)
 	{
 		stop_simulation(philo);
 		pthread_mutex_lock(philo->write_lock);
-		printf("%zu %zu %s", time - philo->start_time - 1,
+		printf("%zu %zu %s", time - philo->start_time,
 			philo->id, MSG_DEATH);
 		pthread_mutex_unlock(philo->dead_lock);
 		return (1);
