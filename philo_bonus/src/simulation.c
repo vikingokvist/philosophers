@@ -22,21 +22,18 @@ int	start_simulation(t_philo *philo)
 	{
 		pids[i] = fork();
 		if (pids[i] < 0)
+		{
+			printf(ERR_FORKS);
+			kill_processes(philo, pids);
 			return (1);
+		}
 		if (pids[i] == 0)
 		{
 			philo_routine(&philo[i]);
-			exit(1);
 		}
 		i++;
 	}
 	kill_processes(philo, pids);
-	i = 0;
-	while (i < philo->table->philosophers_count)
-	{
-		waitpid(pids[i], NULL, 0);
-		i++;
-	}
 	return (0);
 }
 
@@ -56,5 +53,11 @@ void	kill_processes(t_philo *philo, pid_t *pids)
 				kill(pids[i], SIGTERM);
 			i++;
 		}
+	}
+	i = 0;
+	while (i < philo->table->philosophers_count)
+	{
+		waitpid(pids[i], NULL, 0);
+		i++;
 	}
 }

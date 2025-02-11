@@ -20,7 +20,7 @@ void	*table_routine(void *param)
 	philo = (t_philo *)param;
 	while (1)
 	{
-		if ((get_time() - philo->last_meal) > philo->time_to_die)
+		if ((get_time() - philo->last_meal) >= philo->time_to_die)
 		{
 			sem_wait(philo->write_sem);
 			time = get_time() - philo->start_time;
@@ -46,15 +46,18 @@ int	philo_routine(t_philo *philo)
 		ft_usleep(100);
 	while (1)
 	{
-		eat_and_sleep(philo);
+		eat_sleep_think(philo);
 		if (philo->meals_to_have > 0
 			&& philo->meals_had >= philo->meals_to_have)
+		{
+			sem_post(philo->table->forks);
 			exit(0);
+		}
 	}
 	return (0);
 }
 
-void	eat_and_sleep(t_philo *philo)
+void	eat_sleep_think(t_philo *philo)
 {
 	sem_wait(philo->table->forks);
 	status_msg(philo, &philo->id, MSG_FORK);

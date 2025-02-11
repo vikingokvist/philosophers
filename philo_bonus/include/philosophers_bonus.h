@@ -49,19 +49,18 @@
 # define SEM_FORKS "/forks"
 # define SEM_SIM "/sim_sem"
 # define SEM_WRITE "/write_sem"
-# define SEM_DEAD "/dead_sem"
 # define SEM_MEAL "/meal_sem"
 
 typedef struct s_table
 {
 	pthread_t		table_thread;
 	size_t			philosophers_count;
-	int				exit_status;
+	size_t			start_time;
 	sem_t			*forks;
 	sem_t			*write_sem;
-	sem_t			*dead_sem;
 	sem_t			*meal_sem;
 	sem_t			*sim_sem;
+	int				exit_status;
 }	t_table;
 
 typedef struct s_philo
@@ -74,17 +73,16 @@ typedef struct s_philo
 	size_t				meals_had;
 	size_t				start_time;
 	size_t				last_meal;
+	size_t				had_all_meals;
 	t_table				*table;
 	sem_t				*write_sem;
-	sem_t				*dead_sem;
 	sem_t				*meal_sem;
 	sem_t				*sim_sem;
 }	t_philo;
 
 //-----------------------------------------------INIT
 int		main(int argc, char **argv);
-void	init_philos(t_table *table, t_philo *philos, char **argv);
-int		init_table(t_table *table, char **argv);
+int		init_philos(t_table *table, t_philo *philos, char **argv);
 //-----------------------------------------------SEMAPHORES
 int		open_semaphores(t_table *table);
 void	unlink_semaphores(void);
@@ -93,7 +91,7 @@ void	free_semaphores(t_philo *philo);
 int		start_simulation(t_philo *philo);
 void	kill_processes(t_philo *philo, pid_t *pids);
 int		philo_routine(t_philo *philo);
-void	eat_and_sleep(t_philo *philo);
+void	eat_sleep_think(t_philo *philo);
 void	status_msg(t_philo *philo, size_t *id, char *string);
 int		one_philosopher(t_philo *philo);
 //-----------------------------------------------TABLE THREAD

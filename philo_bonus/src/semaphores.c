@@ -21,9 +21,6 @@ int	open_semaphores(t_table *table)
 	table->meal_sem = sem_open(SEM_MEAL, O_CREAT, 0644, 1);
 	if (table->meal_sem == SEM_FAILED)
 		return (printf(ERR_SEM_OPEN), 1);
-	table->dead_sem = sem_open(SEM_DEAD, O_CREAT, 0644, 1);
-	if (table->dead_sem == SEM_FAILED)
-		return (printf(ERR_SEM_OPEN), 1);
 	table->sim_sem = sem_open(SEM_SIM, O_CREAT, 0644, 1);
 	if (table->sim_sem == SEM_FAILED)
 		return (printf(ERR_SEM_OPEN), 1);
@@ -38,7 +35,6 @@ void	free_semaphores(t_philo *philo)
 	sem_close(philo->table->forks);
 	sem_close(philo->table->sim_sem);
 	sem_close(philo->table->write_sem);
-	sem_close(philo->table->dead_sem);
 	sem_close(philo->table->meal_sem);
 	unlink_semaphores();
 }
@@ -47,7 +43,6 @@ void	unlink_semaphores(void)
 {
 	sem_unlink(SEM_FORKS);
 	sem_unlink(SEM_SIM);
-	sem_unlink(SEM_WRITE);
 	sem_unlink(SEM_WRITE);
 	sem_unlink(SEM_MEAL);
 }

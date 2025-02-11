@@ -29,7 +29,7 @@ size_t	get_time(void)
 
 	if (gettimeofday(&time, NULL) == -1)
 		return (printf(ERR_TIME), 0);
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
 int	check_valid_values(char **argv)
@@ -72,6 +72,8 @@ long	ft_atol(const char *str)
 	int		minus;
 	int		i;
 
+	if (!str)
+		return (0);
 	i = 0;
 	res = 0;
 	minus = 1;

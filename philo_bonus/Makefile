@@ -18,7 +18,6 @@ RESET := \033[0m
 SRCS = ./src/main.c ./src/init.c ./src/simulation.c ./src/utils.c \
 	./src/philo_routine.c ./src/semaphores.c
 
-	
 #OBJS--------------------------------------------------------------------------------------
 
 OBJS = $(SRCS:.c=.o)
@@ -32,15 +31,15 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -lpthread -lrt
-	@echo "[100%] $(GREEN)(Philosophers) Compilation successful!$(RESET)"
+	@echo "[100%] $(GREEN)(Philosophers Bonus) Compilation successful!$(RESET)"
 
 clean:
 	$(RM) $(OBJS)
-	@echo "[100%] $(RED)(Philosophers) Cleaning up objects...$(RESET)"
+	@echo "[100%] $(RED)(Philosophers Bonus) Cleaning up objects...$(RESET)"
 
 fclean:
 	$(RM) $(OBJS) $(NAME)
-	@echo "[100%] $(RED)(Philosophers) Cleaning up executable...$(RESET)"
+	@echo "[100%] $(RED)(Philosophers Bonus) Cleaning up executable...$(RESET)"
 
 re: fclean all bonus
 

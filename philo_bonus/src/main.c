@@ -21,9 +21,8 @@ int	main(int argc, char **argv)
 		return (printf(ERR_ARGS, ERR_ARGS2), 1);
 	if (check_valid_values(argv))
 		return (1);
-	if (init_table(&table, argv))
+	if (init_philos(&table, philos, argv))
 		return (free_semaphores(philos), 1);
-	init_philos(&table, philos, argv);
 	if (start_simulation(philos))
 		return (free_semaphores(philos), printf(ERR_FORKS), 1);
 	free_semaphores(philos);
