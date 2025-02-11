@@ -10,23 +10,22 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philosophers.h"
+#include "../include/philosophers_bonus.h"
 
 int	main(int argc, char **argv)
 {
 	t_table			table;
 	t_philo			philos[PHILOS_MAX];
-	pthread_mutex_t	forks[PHILOS_MAX];
 
 	if (!(argc >= 5 && argc <= 6))
 		return (printf(ERR_ARGS, ERR_ARGS2), 1);
 	if (check_valid_values(argv))
 		return (1);
-	if (init_table(&table, forks, argv))
-		return (printf(ERR_MUTEX_INIT), 1);
+	if (init_table(&table, argv))
+		return (free_semaphores(philos), 1);
 	init_philos(&table, philos, argv);
-	if (create_threads(philos))
-		return (1);
-	join_and_destroy_threads(philos);
+	if (start_simulation(philos))
+		return (free_semaphores(philos), printf(ERR_FORKS), 1);
+	free_semaphores(philos);
 	return (0);
 }
