@@ -50,6 +50,7 @@
 # define SEM_SIM "/sim_sem"
 # define SEM_WRITE "/write_sem"
 # define SEM_MEAL "/meal_sem"
+# define SEM_DEAD "/dead_sem"
 
 typedef struct s_table
 {
@@ -60,6 +61,7 @@ typedef struct s_table
 	sem_t			*write_sem;
 	sem_t			*meal_sem;
 	sem_t			*sim_sem;
+	sem_t			*dead_sem;
 	int				exit_status;
 }	t_table;
 
@@ -78,6 +80,7 @@ typedef struct s_philo
 	sem_t				*write_sem;
 	sem_t				*meal_sem;
 	sem_t				*sim_sem;
+	sem_t				*dead_sem;
 }	t_philo;
 
 //-----------------------------------------------INIT

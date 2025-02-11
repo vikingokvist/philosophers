@@ -16,13 +16,13 @@ int	init_philos(t_table *table, t_philo *philo, char **argv)
 {
 	size_t		i;
 
-	i = 0;
+	i = -1;
 	table->start_time = get_time();
 	table->philosophers_count = ft_atol(argv[1]);
 	unlink_semaphores();
 	if (open_semaphores(table))
 		return (1);
-	while (i < table->philosophers_count)
+	while (++i < table->philosophers_count)
 	{
 		philo[i].id = i;
 		philo[i].time_to_die = ft_atol(argv[2]);
@@ -30,13 +30,13 @@ int	init_philos(t_table *table, t_philo *philo, char **argv)
 		philo[i].time_to_sleep = ft_atol(argv[4]);
 		philo[i].meals_to_have = ft_atol(argv[5]);
 		philo[i].meals_had = 0;
+		philo[i].table = table;
 		philo[i].start_time = table->start_time;
 		philo[i].last_meal = table->start_time;
-		philo[i].table = table;
 		philo[i].sim_sem = table->sim_sem;
 		philo[i].meal_sem = table->meal_sem;
 		philo[i].write_sem = table->write_sem;
-		i++;
+		philo[i].dead_sem = table->dead_sem;
 	}
 	return (0);
 }
