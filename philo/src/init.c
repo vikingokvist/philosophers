@@ -33,7 +33,7 @@ int	init_table(t_table *table, pthread_mutex_t *forks, char **argv)
 		return (1);
 	if (pthread_mutex_init(&table->sim_lock, NULL) != 0)
 		return (1);
-	if (pthread_mutex_init(&table->dead_lock, NULL) != 0)
+	if (pthread_mutex_init(&table->sim_start, NULL) != 0)
 		return (1);
 	return (0);
 }
@@ -56,7 +56,7 @@ void	init_philos(t_table *table, t_philo *philo, char **argv)
 		philo[i].write_lock = &table->write_lock;
 		philo[i].meal_lock = &table->meal_lock;
 		philo[i].sim_lock = &table->sim_lock;
-		philo[i].dead_lock = &table->dead_lock;
+		philo[i].sim_start = &table->sim_start;
 	}
 }
 

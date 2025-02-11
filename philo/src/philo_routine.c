@@ -17,8 +17,8 @@ void	*philo_routine(void *param)
 	t_philo	*philo;
 
 	philo = (t_philo *)param;
-	pthread_mutex_lock(philo->dead_lock);
-	pthread_mutex_unlock(philo->dead_lock);
+	pthread_mutex_lock(philo->sim_start);
+	pthread_mutex_unlock(philo->sim_start);
 	philo->start_time = philo->table->start_time;
 	philo->last_meal = philo->table->start_time;
 	if (philo->table->philosophers_count == 1)

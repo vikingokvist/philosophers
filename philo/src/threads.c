@@ -17,7 +17,7 @@ int	create_threads(t_philo *philo)
 	size_t	i;
 
 	i = 0;
-	pthread_mutex_lock(philo->dead_lock);
+	pthread_mutex_lock(philo->sim_start);
 	while (i < philo->table->philosophers_count)
 	{
 		if (pthread_create(&philo[i].thread, NULL,
@@ -29,7 +29,7 @@ int	create_threads(t_philo *philo)
 		i++;
 	}
 	philo->table->start_time = get_time();
-	pthread_mutex_unlock(philo->dead_lock);
+	pthread_mutex_unlock(philo->sim_start);
 	return (0);
 }
 
@@ -53,5 +53,5 @@ void	join_and_destroy_threads(t_philo *philo)
 	pthread_mutex_destroy(philo->write_lock);
 	pthread_mutex_destroy(philo->meal_lock);
 	pthread_mutex_destroy(philo->sim_lock);
-	pthread_mutex_destroy(philo->dead_lock);
+	pthread_mutex_destroy(philo->sim_start);
 }
