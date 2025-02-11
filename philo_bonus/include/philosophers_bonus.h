@@ -61,7 +61,6 @@ typedef struct s_table
 	sem_t			*write_sem;
 	sem_t			*meal_sem;
 	sem_t			*sim_sem;
-	sem_t			*dead_sem;
 	int				exit_status;
 }	t_table;
 
@@ -80,7 +79,6 @@ typedef struct s_philo
 	sem_t				*write_sem;
 	sem_t				*meal_sem;
 	sem_t				*sim_sem;
-	sem_t				*dead_sem;
 }	t_philo;
 
 //-----------------------------------------------INIT

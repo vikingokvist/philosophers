@@ -15,18 +15,17 @@
 int	anyone_died(t_philo *philo)
 {
 	size_t	time;
-	size_t	time_since_last_meal;
 
 	pthread_mutex_lock(philo->dead_lock);
 	time = get_time();
-	time_since_last_meal = time - philo->last_meal;
-	if (time_since_last_meal > philo->time_to_die)
+	if ((time - philo->last_meal) > philo->time_to_die)
 	{
 		stop_simulation(philo);
 		pthread_mutex_lock(philo->write_lock);
 		printf("%zu %zu %s", time - philo->start_time,
 			philo->id, MSG_DEATH);
 		pthread_mutex_unlock(philo->dead_lock);
+		pthread_mutex_unlock(philo->write_lock);
 		return (1);
 	}
 	pthread_mutex_unlock(philo->dead_lock);

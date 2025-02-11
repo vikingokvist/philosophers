@@ -16,22 +16,20 @@ void	*table_routine(void *param)
 {
 	t_philo	*philo;
 	size_t	time;
-	size_t	time_since_last_meal;
 
 	philo = (t_philo *)param;
 	while (1)
 	{
-		sem_wait(philo->dead_sem);
+		sem_wait(philo->meal_sem);
 		time = get_time();
-		time_since_last_meal = time - philo->last_meal;
-		if (time_since_last_meal > philo->time_to_die)
+		if ((time - philo->last_meal) > philo->time_to_die)
 		{
 			sem_wait(philo->write_sem);
 			printf("%zu %zu %s", time - philo->start_time,
 				philo->id, MSG_DEATH);
 			exit(1);
 		}
-		sem_post(philo->dead_sem);
+		sem_post(philo->meal_sem);
 	}
 	return (NULL);
 }

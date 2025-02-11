@@ -36,7 +36,6 @@ int	init_philos(t_table *table, t_philo *philo, char **argv)
 		philo[i].sim_sem = table->sim_sem;
 		philo[i].meal_sem = table->meal_sem;
 		philo[i].write_sem = table->write_sem;
-		philo[i].dead_sem = table->dead_sem;
 	}
 	return (0);
 }
