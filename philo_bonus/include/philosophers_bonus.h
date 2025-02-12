@@ -92,7 +92,7 @@ void	free_semaphores(t_philo *philo);
 int		start_simulation(t_philo *philo);
 void	kill_processes(t_philo *philo, pid_t *pids);
 int		philo_routine(t_philo *philo);
-void	eat_sleep_think(t_philo *philo);
+void	eat_routine(t_philo *philo);
 void	status_msg(t_philo *philo, size_t *id, char *string);
 int		one_philosopher(t_philo *philo);
 //-----------------------------------------------TABLE THREAD

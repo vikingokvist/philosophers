@@ -27,6 +27,7 @@ void	*table_routine(void *param)
 			sem_wait(philo->write_sem);
 			printf("%zu %zu %s", time - philo->start_time,
 				philo->id, MSG_DEATH);
+			sem_post(philo->write_sem);
 			exit(1);
 		}
 		sem_post(philo->meal_sem);
@@ -48,33 +49,33 @@ int	philo_routine(t_philo *philo)
 		ft_usleep(100);
 	while (1)
 	{
-		eat_sleep_think(philo);
+		eat_routine(philo);
 		if (philo->meals_to_have > 0
 			&& philo->meals_had >= philo->meals_to_have)
 			exit(0);
+		status_msg(philo, &philo->id, MSG_SLEEP);
+		ft_usleep(philo->time_to_sleep);
+		status_msg(philo, &philo->id, MSG_THINK);
 	}
 	return (0);
 }
 
-void	eat_sleep_think(t_philo *philo)
+void	eat_routine(t_philo *philo)
 {
 	sem_wait(philo->table->forks);
 	status_msg(philo, &philo->id, MSG_FORK);
 	sem_wait(philo->table->forks);
 	status_msg(philo, &philo->id, MSG_FORK);
 	sem_wait(philo->meal_sem);
-	status_msg(philo, &philo->id, MSG_EAT);
 	philo->last_meal = get_time();
 	sem_post(philo->meal_sem);
-	ft_usleep(philo->time_to_eat);
 	sem_wait(philo->meal_sem);
 	philo->meals_had += 1;
 	sem_post(philo->meal_sem);
-	status_msg(philo, &philo->id, MSG_SLEEP);
+	status_msg(philo, &philo->id, MSG_EAT);
+	ft_usleep(philo->time_to_eat);
 	sem_post(philo->table->forks);
 	sem_post(philo->table->forks);
-	ft_usleep(philo->time_to_sleep);
-	status_msg(philo, &philo->id, MSG_THINK);
 }
 
 void	status_msg(t_philo *philo, size_t *id, char *string)

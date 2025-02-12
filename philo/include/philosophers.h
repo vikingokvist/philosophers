@@ -85,7 +85,8 @@ int		create_threads(t_philo *philos);
 void	join_and_destroy_threads(t_philo *philo);
 //-----------------------------------------------PHILO ROUTINE
 void	*philo_routine(void *param);
-void	eat_and_sleep_think(t_philo *philo);
+void	sleep_think_routine(t_philo *philo);
+void	eat_routine(t_philo *philo);
 void	status_msg(t_philo *philo, size_t *id, char *string);
 //-----------------------------------------------TABLE ROUTINE
 int		anyone_died(t_philo *philo);

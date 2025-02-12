@@ -27,24 +27,23 @@ void	*philo_routine(void *param)
 		ft_usleep(philo, 100);
 	while (simulation_continues(philo))
 	{
-		eat_and_sleep_think(philo);
 		if (anyone_died(philo))
 			return (NULL);
+		eat_routine(philo);
 		if (philo->meals_to_have > 0
 			&& philo->meals_had >= philo->meals_to_have)
 			return (NULL);
+		sleep_think_routine(philo);
 	}
 	return (NULL);
 }
 
-void	eat_and_sleep_think(t_philo *philo)
+void	eat_routine(t_philo *philo)
 {
 	pthread_mutex_lock(philo->l_fork);
 	status_msg(philo, &philo->id, MSG_FORK);
 	pthread_mutex_lock(philo->r_fork);
 	status_msg(philo, &philo->id, MSG_FORK);
-	status_msg(philo, &philo->id, MSG_EAT);
-	ft_usleep(philo, philo->time_to_eat);
 	pthread_mutex_lock(philo->meal_lock);
 	philo->last_meal = get_time();
 	pthread_mutex_unlock(philo->meal_lock);
@@ -54,9 +53,15 @@ void	eat_and_sleep_think(t_philo *philo)
 		philo->meals_had += 1;
 		pthread_mutex_unlock(philo->meal_lock);
 	}
-	status_msg(philo, &philo->id, MSG_SLEEP);
+	status_msg(philo, &philo->id, MSG_EAT);
+	ft_usleep(philo, philo->time_to_eat);
 	pthread_mutex_unlock(philo->l_fork);
 	pthread_mutex_unlock(philo->r_fork);
+}
+
+void	sleep_think_routine(t_philo *philo)
+{
+	status_msg(philo, &philo->id, MSG_SLEEP);
 	ft_usleep(philo, philo->time_to_sleep);
 	status_msg(philo, &philo->id, MSG_THINK);
 }
@@ -65,9 +70,12 @@ void	status_msg(t_philo *philo, size_t *id, char *string)
 {
 	size_t	time;
 
-	if (!simulation_continues(philo))
-		return ;
 	pthread_mutex_lock(philo->write_lock);
+	if (!simulation_continues(philo))
+	{
+		pthread_mutex_unlock(philo->write_lock);
+		return ;
+	}
 	time = get_time() - philo->start_time;
 	printf("%zu %zu %s", time, *id, string);
 	pthread_mutex_unlock(philo->write_lock);
