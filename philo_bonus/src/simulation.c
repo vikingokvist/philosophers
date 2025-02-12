@@ -30,6 +30,7 @@ int	start_simulation(t_philo *philo)
 		if (pids[i] == 0)
 		{
 			philo_routine(&philo[i]);
+			exit(0);
 		}
 		i++;
 	}

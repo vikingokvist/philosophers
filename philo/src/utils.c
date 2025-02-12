@@ -56,7 +56,7 @@ int	check_valid_values(char **argv)
 	{
 		if (i == 1 && (ft_atol(argv[i]) > PHILOS_MAX || ft_atol(argv[i]) <= 0))
 			return (printf(ERR_ARGS_PHILO_MAX), 1);
-		else if (ft_atol(argv[i]) <= 0 || ft_atol(argv[i]) >= UINT_MAX)
+		else if (ft_atol(argv[i]) <= 0 || ft_atol(argv[i]) >= INT_MAX)
 			return (printf(ERR_ARGS_VALID), 1);
 		i++;
 	}

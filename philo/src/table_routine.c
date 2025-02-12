@@ -20,10 +20,13 @@ int	anyone_died(t_philo *philo)
 	time = get_time();
 	if ((time - philo->last_meal) > philo->time_to_die)
 	{
-		stop_simulation(philo);
 		pthread_mutex_lock(philo->write_lock);
-		printf("%zu %zu %s", time - philo->start_time,
-			philo->id, MSG_DEATH);
+		if (simulation_continues(philo))
+		{
+			printf("%zu %zu %s", time - philo->start_time,
+				philo->id, MSG_DEATH);
+			stop_simulation(philo);
+		}
 		pthread_mutex_unlock(philo->meal_lock);
 		pthread_mutex_unlock(philo->write_lock);
 		return (1);

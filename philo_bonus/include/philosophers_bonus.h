@@ -29,7 +29,7 @@
 
 # define ERR_ARGS "Usage:\n  ./philo <number_of_philosopher> <time_to_die> %s"
 # define ERR_ARGS2 "<time_to_eat> <time_to_sleep> [meals_to_have]\n"
-# define ERR_ARGS_VALID "Values must be digits from 0 to UINT_MAX\n"
+# define ERR_ARGS_VALID "Values must be digits from 60 to INT_MAX\n"
 # define ERR_ARGS_PHILO_MAX "<number_of_philosopher> cannot exceed 200\n"
 # define ERR_THREAD_CREATE "Failed to create thread.\n"
 # define ERR_THREAD_JOIN "Failed joining threads.\n"

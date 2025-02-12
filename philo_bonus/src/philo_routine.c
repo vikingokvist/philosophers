@@ -51,10 +51,7 @@ int	philo_routine(t_philo *philo)
 		eat_sleep_think(philo);
 		if (philo->meals_to_have > 0
 			&& philo->meals_had >= philo->meals_to_have)
-		{
-			sem_post(philo->table->forks);
 			exit(0);
-		}
 	}
 	return (0);
 }
