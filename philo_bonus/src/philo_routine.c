@@ -27,10 +27,11 @@ void	*table_routine(void *param)
 			sem_wait(philo->write_sem);
 			printf("%zu %zu %s", time - philo->start_time,
 				philo->id, MSG_DEATH);
-			sem_post(philo->write_sem);
+			sem_post(philo->meal_sem);
 			exit(1);
 		}
 		sem_post(philo->meal_sem);
+		usleep(100);
 	}
 	return (NULL);
 }
@@ -56,6 +57,7 @@ int	philo_routine(t_philo *philo)
 		status_msg(philo, &philo->id, MSG_SLEEP);
 		ft_usleep(philo->time_to_sleep);
 		status_msg(philo, &philo->id, MSG_THINK);
+		usleep(100);
 	}
 	return (0);
 }
