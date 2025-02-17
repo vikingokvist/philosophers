@@ -14,24 +14,30 @@
 
 int	anyone_died(t_philo *philo)
 {
-	size_t	time;
+	size_t	i;
 
-	pthread_mutex_lock(philo->meal_lock);
-	time = get_time();
-	if ((time - philo->last_meal) > philo->time_to_die)
+	while (1)
 	{
-		pthread_mutex_lock(philo->write_lock);
-		if (simulation_continues(philo))
+		i = 0;
+		while (i < philo->table->philosophers_count)
 		{
-			printf("%zu %zu %s", time - philo->start_time,
-				philo->id, MSG_DEATH);
-			stop_simulation(philo);
+			pthread_mutex_lock(philo->meal_lock);
+			if ((get_time() - philo[i].last_meal) > philo[i].time_to_die)
+			{
+				pthread_mutex_lock(philo->write_lock);
+				printf("%zu %zu %s", get_time() - philo->table->start_time,
+					philo[i].id, MSG_DEATH);
+				stop_simulation(philo);
+				pthread_mutex_unlock(philo->meal_lock);
+				pthread_mutex_unlock(philo->write_lock);
+				return (1);
+			}
+			pthread_mutex_unlock(philo->meal_lock);
+			if (philo->table->finished == philo->table->philosophers_count)
+				return (0);
+			i++;
 		}
-		pthread_mutex_unlock(philo->meal_lock);
-		pthread_mutex_unlock(philo->write_lock);
-		return (1);
 	}
-	pthread_mutex_unlock(philo->meal_lock);
 	return (0);
 }
 

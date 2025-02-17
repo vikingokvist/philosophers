@@ -15,23 +15,21 @@
 void	*table_routine(void *param)
 {
 	t_philo	*philo;
-	size_t	time;
 
 	philo = (t_philo *)param;
 	while (1)
 	{
 		sem_wait(philo->meal_sem);
-		time = get_time();
-		if ((time - philo->last_meal) > philo->time_to_die)
+		if ((get_time() - philo->last_meal) > philo->time_to_die)
 		{
 			sem_wait(philo->write_sem);
-			printf("%zu %zu %s", time - philo->start_time,
+			printf("%zu %zu %s", get_time() - philo->start_time,
 				philo->id, MSG_DEATH);
 			sem_post(philo->meal_sem);
 			exit(1);
 		}
 		sem_post(philo->meal_sem);
-		usleep(100);
+		usleep(150);
 	}
 	return (NULL);
 }
@@ -57,7 +55,7 @@ int	philo_routine(t_philo *philo)
 		status_msg(philo, &philo->id, MSG_SLEEP);
 		ft_usleep(philo->time_to_sleep);
 		status_msg(philo, &philo->id, MSG_THINK);
-		usleep(100);
+		usleep(150);
 	}
 	return (0);
 }

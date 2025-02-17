@@ -19,20 +19,23 @@ void	*philo_routine(void *param)
 	philo = (t_philo *)param;
 	pthread_mutex_lock(philo->sim_start);
 	pthread_mutex_unlock(philo->sim_start);
-	philo->start_time = philo->table->start_time;
+	pthread_mutex_lock(philo->meal_lock);
 	philo->last_meal = philo->table->start_time;
+	pthread_mutex_unlock(philo->meal_lock);
 	if (philo->table->philosophers_count == 1)
 		return (one_philosopher(philo));
 	if (philo->id % 2 != 0)
 		ft_usleep(philo, 100);
 	while (simulation_continues(philo))
 	{
-		if (anyone_died(philo))
-			return (NULL);
 		eat_routine(philo);
 		if (philo->meals_to_have > 0
 			&& philo->meals_had >= philo->meals_to_have)
-			return (NULL);
+		{
+			philo->table->finished += 1;
+			return (pthread_mutex_unlock(philo->l_fork),
+				pthread_mutex_unlock(philo->r_fork), NULL);
+		}
 		sleep_think_routine(philo);
 	}
 	return (NULL);
@@ -76,7 +79,7 @@ void	status_msg(t_philo *philo, size_t *id, char *string)
 		pthread_mutex_unlock(philo->write_lock);
 		return ;
 	}
-	time = get_time() - philo->start_time;
+	time = get_time() - philo->table->start_time;
 	printf("%zu %zu %s", time, *id, string);
 	pthread_mutex_unlock(philo->write_lock);
 }

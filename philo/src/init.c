@@ -20,6 +20,7 @@ int	init_table(t_table *table, pthread_mutex_t *forks, char **argv)
 	table->forks = forks;
 	table->simulation_continues = 1;
 	table->times_ate = 0;
+	table->finished = 0;
 	i = 0;
 	while (i < table->philosophers_count)
 	{
@@ -45,33 +46,20 @@ void	init_philos(t_table *table, t_philo *philo, char **argv)
 	i = -1;
 	while (++i < table->philosophers_count)
 	{
-		philo[i].id = i;
+		philo[i].id = i + 1;
 		philo[i].time_to_die = ft_atol(argv[2]);
 		philo[i].time_to_eat = ft_atol(argv[3]);
 		philo[i].time_to_sleep = ft_atol(argv[4]);
 		philo[i].meals_to_have = ft_atol(argv[5]);
 		philo[i].meals_had = 0;
 		philo[i].table = table;
-		set_forks(philo, table, i);
+		philo[i].l_fork = &table->forks[philo[i].id - 1];
+		philo[i].r_fork = &table->forks[(philo[i].id)
+			% philo->table->philosophers_count];
 		philo[i].write_lock = &table->write_lock;
 		philo[i].meal_lock = &table->meal_lock;
 		philo[i].sim_lock = &table->sim_lock;
 		philo[i].sim_start = &table->sim_start;
-	}
-}
-
-void	set_forks(t_philo *philo, t_table *table, int i)
-{
-	if (philo[i].id % 2 == 0)
-	{
-		philo[i].l_fork = &table->forks[i];
-		philo[i].r_fork = &table->forks[(i + 1)
-			% philo->table->philosophers_count];
-	}
-	else if (philo[i].id % 2 != 0)
-	{
-		philo[i].l_fork = &table->forks[(i + 1)
-			% philo->table->philosophers_count];
-		philo[i].r_fork = &table->forks[i];
+		philo[i].last_meal = get_time();
 	}
 }

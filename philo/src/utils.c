@@ -19,9 +19,9 @@ void	ft_usleep(t_philo *philo, size_t time_to_usleep)
 	wake_up = get_time() + time_to_usleep;
 	while (get_time() < wake_up)
 	{
-		if (!simulation_continues(philo) || anyone_died(philo))
+		if (!simulation_continues(philo))
 			break ;
-		usleep(100);
+		usleep(50);
 	}
 }
 

@@ -30,6 +30,7 @@ int	create_threads(t_philo *philo)
 	}
 	philo->table->start_time = get_time();
 	pthread_mutex_unlock(philo->sim_start);
+	anyone_died(philo);
 	return (0);
 }
 

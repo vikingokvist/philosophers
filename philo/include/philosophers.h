@@ -52,6 +52,7 @@ typedef struct s_table
 	pthread_mutex_t	sim_start;
 	size_t			start_time;
 	size_t			times_ate;
+	size_t			finished;
 }	t_table;
 
 typedef struct s_philo
