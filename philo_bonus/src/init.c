@@ -24,7 +24,7 @@ int	init_philos(t_table *table, t_philo *philo, char **argv)
 		return (1);
 	while (++i < table->philosophers_count)
 	{
-		philo[i].id = i;
+		philo[i].id = i + 1;
 		philo[i].time_to_die = ft_atol(argv[2]);
 		philo[i].time_to_eat = ft_atol(argv[3]);
 		philo[i].time_to_sleep = ft_atol(argv[4]);
